@@ -59,8 +59,10 @@ button{font:inherit}
 .btn.solid:hover{background:#ea5f10;border-color:#ea5f10}
 .btn.sm{padding:6px 11px;font-size:.72rem}
 /* organiser-only controls: hidden until the code is entered */
-#btnNews,#btnData{display:none}
-body.admin #btnNews,body.admin #btnData{display:inline-block}
+#btnNews,#btnData,#btnSquads{display:none}
+#mSquads{display:none}
+body.admin #btnNews,body.admin #btnData,body.admin #btnSquads{display:inline-block}
+body.admin #mSquads{display:flex}
 .src{font-family:var(--cond);font-size:.62rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
   color:var(--muted);border:1px solid var(--slate);padding:4px 9px;border-radius:4px}
 .src.file{color:var(--lime);border-color:rgba(191,196,28,.5)}
@@ -386,6 +388,33 @@ body.admin .edit-dot{display:flex}
   aspect-ratio:1002/1125;background:var(--logo) center/contain no-repeat;
   opacity:.12;pointer-events:none;z-index:0}
 
+/* ---------- squad editor ---------- */
+select.sel{width:100%;background:var(--ink);border:1px solid rgba(150,153,2,.35);
+  color:var(--bone);border-radius:10px;padding:12px 14px;font-family:var(--cond);
+  font-size:1.05rem;font-weight:600;letter-spacing:.02em;appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--lime) 50%),
+    linear-gradient(135deg,var(--lime) 50%,transparent 50%);
+  background-position:calc(100% - 20px) 20px,calc(100% - 14px) 20px;
+  background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+select.sel:focus{outline:none;border-color:var(--lime)}
+select.sel option{background:var(--ink);color:var(--bone)}
+
+.sqedit{display:flex;flex-direction:column;gap:10px}
+.sqrow{display:flex;align-items:center;gap:10px;background:var(--navy);
+  border-radius:10px;padding:10px 12px}
+.sqrow input.no{width:74px;flex:none;text-align:center}
+.sqrow input.nm{flex:1;min-width:0}
+.sqedit input{background:var(--ink);border:1px solid rgba(150,153,2,.35);color:var(--bone);
+  border-radius:8px;padding:10px 12px;font-family:var(--cond);font-size:1rem;font-weight:600}
+.sqedit input:focus{outline:none;border-color:var(--lime)}
+.sqrow .del{flex:none;background:transparent;border:1px solid rgba(212,80,5,.55);
+  color:var(--rust);border-radius:8px;width:40px;height:40px;font-size:1.1rem;cursor:pointer}
+.sqrow .del:hover{background:rgba(212,80,5,.16)}
+.sqfoot{display:flex;gap:10px;margin-top:14px}
+.sqfoot .btn{flex:1}
+.sqhint{font-family:var(--cond);font-size:.9rem;color:var(--muted);margin:2px 0 10px;
+  letter-spacing:.02em}
+
 /* ---------- install sheet (iOS instructions) ---------- */
 .instsheet{position:fixed;left:0;right:0;bottom:0;z-index:400;background:var(--navy);
   border-top:1px solid rgba(150,153,2,.4);border-radius:16px 16px 0 0;
@@ -640,8 +669,15 @@ body.admin .edit-dot{display:flex}
 
   /* --- modal as a bottom sheet --- */
   .veil{padding:0;align-items:flex-end}
-  .modal,.modal.wide{max-width:100%;max-height:92vh;border-left:0;border-right:0;border-bottom:0;
+  #veilHost{width:100%;max-width:100vw;min-width:0}
+  .modal,.modal.wide{width:100%;max-width:100%;min-width:0;max-height:92vh;
+    border-left:0;border-right:0;border-bottom:0;overflow-x:hidden;
     border-radius:18px 18px 0 0;animation:sheet .32s cubic-bezier(.2,.9,.25,1) both}
+  .modal *{min-width:0}
+  .sqfoot{flex-wrap:wrap}
+  .sqfoot .btn{flex:1 1 100%}
+  .sqrow input.no{width:64px}
+  .sqhint{font-size:.85rem}
   @keyframes sheet{from{transform:translateY(100%)}to{transform:none}}
   .modal-h{padding:14px 18px;border-radius:18px 18px 0 0}
   .modal-h h3{font-size:1.14rem}
@@ -731,6 +767,7 @@ body.admin .edit-dot{display:flex}
     <div class="sync" id="sync"><i></i><span id="syncTxt">Connecting</span></div>
     <button class="btn" id="btnInstall" style="display:none">Install App</button>
     <button class="btn" id="btnAdmin">Organiser</button>
+    <button class="btn" id="btnSquads">Squads</button>
     <button class="btn" id="btnNews">Notice</button>
     <button class="btn" id="btnData">Data</button>
     <button class="btn solid" id="btnStage">Display</button>
@@ -743,6 +780,7 @@ body.admin .edit-dot{display:flex}
   <div class="tt"><strong>Futsal Cup</strong><span id="mSync">Live</span></div>
   <button class="mbtn" id="mInstall" aria-label="Install app" style="display:none">⤓</button>
   <button class="mbtn" id="mAdmin" aria-label="Organiser">🔒</button>
+  <button class="mbtn" id="mSquads" aria-label="Edit squads">👥</button>
   <button class="mbtn" id="mData" aria-label="Data">⇄</button>
   <button class="mbtn" id="mStage" aria-label="Display mode">▶</button>
 </div>
@@ -913,8 +951,7 @@ const SQUADS = {
            ['Anwar Alghamdi','755136'],['Khalid Alharthi','797857'],['Abdullah Alansari','836648']],
   titans :[['Turki Abu Alola','766895'],['Rayan Qutub','764643'],['Omar Aljohani','762537'],
            ['Johnpaul','902926'],['Abdullah Alsubhi','768245'],['Nawaf Alsubaie','762796'],
-           ['Alaa Alsharif','777503'],['Eyad Alqurashi (GK)','773171'],['Mohammed Alghamdi','752246'],
-           ['Samer Aljuhani','824951']],
+           ['Alaa Alsharif','777503'],['Eyad Alqurashi (GK)','773171'],['Mohammed Alghamdi','752246']],
   vipers :[['Ali Alshehri','768421'],['Ahmed Bin Qurban','811895'],['Nayif Alhobaishy','752703'],
            ['Murad Sakran','764231'],['Badr Aljohani','299504'],['Khalid Almarwani','296547'],
            ['Abdulaziz Hejori','749134'],['Mohammed Alahmadi','796050'],['Suhail Aljohani','796037']],
@@ -993,8 +1030,7 @@ const KIT = {
     'Nawaf Alsubaie':      ['6','M'],
     'Alaa Alsharif':       ['13','XL'],
     'Eyad Alqurashi (GK)': ['1','L'],
-    'Mohammed Alghamdi':   ['8','XL'],
-    'Samer Aljuhani':      ['7','M']
+    'Mohammed Alghamdi':   ['8','XL']
   },
   warriors: {
     'Nawaf Alotaibi':      ['11','S'],
@@ -1087,7 +1123,7 @@ const KO_TIES = [
    2 · SHARED STATE
    ================================================================== */
 const SKEY = 'ynglfd-futsal-2026';
-let state = { results:{}, ko:{}, goals:{}, cards:{}, news:'', ts:0 };
+let state = { results:{}, ko:{}, goals:{}, cards:{}, squads:{}, news:'', ts:0 };
 let admin = false, saving = false;
 
 /* ---------- Firebase Realtime Database (works on any host) ----------
@@ -1129,7 +1165,7 @@ let srcMode='none';
 function adopt(inc){
   if(!inc) return false;
   if(!inc.ts || inc.ts >= (state.ts||0)){
-    state = Object.assign({results:{},ko:{},goals:{},cards:{},news:'',ts:0}, inc);
+    state = Object.assign({results:{},ko:{},goals:{},cards:{},squads:{},news:'',ts:0}, inc);
     return true;
   }
   return false;
@@ -1156,7 +1192,7 @@ async function pullState(){
     const inc = snap.val();
     if(inc){
       if(!inc.ts || inc.ts >= (state.ts||0))
-        state = Object.assign({results:{},ko:{},goals:{},cards:{},news:'',ts:0}, inc);
+        state = Object.assign({results:{},ko:{},goals:{},cards:{},squads:{},news:'',ts:0}, inc);
     }
   }catch(e){ /* first run: key not created yet */ }
   srcMode='cloud';
@@ -1179,6 +1215,8 @@ async function pushState(){
 const res = i => state.results[i] || null;
 const played = i => { const r=res(i); return !!r && r.hs!=null && r.as!=null; };
 const gKey = (t,p) => t+':'+p;
+/* the live squad: an organiser edit stored in state.squads wins over the built-in list */
+const squadOf = t => (state.squads && state.squads[t]) ? state.squads[t] : (SQUADS[t] || []);
 
 /* ==================================================================
    3 · HELPERS
@@ -1474,7 +1512,7 @@ function renderTables(){
 function scorerLine(i){
   const f=FIXTURES[i], names=[];
   [f.h,f.a].forEach(tk=>{
-    (SQUADS[tk]||[]).forEach((p,pi)=>{
+    squadOf(tk).forEach((p,pi)=>{
       const g=(state.goals[gKey(tk,pi)]||{})[i];
       if(g) names.push('<b>'+esc(p[0].replace(/\s*\(GK\)/,''))+'</b>'+(g>1?' ×'+g:''));
     });
@@ -1516,7 +1554,7 @@ function renderFixtures(host,limit){
 function tallies(){
   const g=[],y=[],r=[];
   Object.keys(SQUADS).forEach(tk=>{
-    (SQUADS[tk]||[]).forEach((p,pi)=>{
+    squadOf(tk).forEach((p,pi)=>{
       const k=gKey(tk,pi);
       let gv=0; const gm=state.goals[k]||{}; Object.keys(gm).forEach(m=>gv+=gm[m]);
       const c=state.cards[k]||{y:0,r:0};
@@ -1629,7 +1667,7 @@ function openMatch(i){
   mSide='h'; drawMatch();
 }
 function playersHTML(tk,i){
-  const list=SQUADS[tk]||[];
+  const list=squadOf(tk);
   if(!list.length) return '<div class="empty-note">No squad registered for this team yet</div>';
   return list.map((p,pi)=>{
     const k=gKey(tk,pi);
@@ -1746,7 +1784,7 @@ function openKO(id){
 function openTeam(key){
   const t=TEAMS[key]; if(!t) return;
   const row=standings(t.group).filter(r=>r.key===key)[0]||{p:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0,form:[]};
-  const squad=SQUADS[key]||[];
+  const squad=squadOf(key);
   const idxs=[]; FIXTURES.forEach((f,i)=>{ if(f.h===key||f.a===key) idxs.push(i); });
   const results=idxs.map(i=>{
     const f=FIXTURES[i], r=res(i), home=f.h===key, opp=home?f.a:f.h;
@@ -1787,7 +1825,12 @@ function openTeam(key){
    +'<div class="field"><label>Recent form</label><div class="formrow" style="justify-content:flex-start">'
    +(form.length?form.map(c=>'<span class="fchip '+c+'">'+c.toUpperCase()+'</span>').join(''):'<span class="fchip n">·</span>')+'</div></div>'
    +'<div class="field"><label>Fixtures &amp; results</label><div class="plist">'+results+'</div></div>'
-   +'<div class="field"><label>Squad · '+squad.length+' players</label><div class="plist">'+squadRows+'</div></div></div>', true);
+   +'<div class="field"><label>Squad · '+squad.length+' players</label><div class="plist">'+squadRows+'</div>'
+   +(admin?'<button class="btn solid" id="editThisSquad" style="width:100%;margin-top:12px">✎ Edit this squad</button>':'')
+   +'</div></div>', true);
+
+  const eb = $('#editThisSquad');
+  if(eb) eb.addEventListener('click', ()=>{ sqTeam = key; openSquads(); });
 }
 
 function openNews(){
@@ -1934,10 +1977,127 @@ function toast(msg,kind){
   el.classList.toggle('bad',kind==='bad'); el.classList.add('on');
   clearTimeout(toastT); toastT=setTimeout(()=>el.classList.remove('on'),2600);
 }
+
+/* ---- detect goals scored by anyone, so every viewer gets the alert ---- */
+function goalTotals(gmap){
+  const out = {};
+  Object.keys(gmap||{}).forEach(k=>{
+    let n=0; const m=gmap[k]||{}; Object.keys(m).forEach(x=>n+=m[x]);
+    if(n) out[k]=n;
+  });
+  return out;
+}
+function describeGoal(key){
+  const [tk, idx] = key.split(':');
+  const t = TEAMS[tk]; if(!t) return null;
+  const p = squadOf(tk)[+idx];
+  const who = p ? String(p[0]).replace(/\s*\(GK\)$/,'') : '';
+  return who ? who + ' — ' + t.name.replace(' FC','') : t.name.replace(' FC','') + ' score';
+}
+function announceGoals(before, after){
+  const a = goalTotals(after), b = goalTotals(before);
+  const fresh = [];
+  Object.keys(a).forEach(k=>{ const d = a[k] - (b[k]||0); if(d>0) fresh.push([k,d]); });
+  if(!fresh.length) return;
+  const first = describeGoal(fresh[0][0]);
+  if(first) flashGoal('GOAL!  ' + first.toUpperCase());
+  const extra = fresh.length - 1;
+  if(extra>0) toast(extra+' more goal'+(extra>1?'s':'')+' recorded');
+}
+
 function flashGoal(txt){
   const el=$('#flash'); el.querySelector('b').textContent=txt;
   el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
   setTimeout(()=>el.classList.remove('on'),1700);
+}
+
+
+/* ==================================================================
+   SQUAD EDITOR  (organiser only — changes sync to everyone)
+   ================================================================== */
+let sqTeam = null;
+
+function openSquads(){
+  if(!admin) return;
+  const opts = Object.keys(TEAMS).map(k =>
+    '<option value="'+k+'"'+(k===sqTeam?' selected':'')+'>'+esc(TEAMS[k].name)+'</option>').join('');
+  if(!sqTeam) sqTeam = Object.keys(TEAMS)[0];
+
+  openVeil('<div class="modal-h"><h3>Edit Squads</h3><button class="btn sm x">Close</button></div>'
+   +'<div class="modal-b">'
+   +'<div class="field"><label>Team</label>'
+   +'<select id="sqTeamSel" class="sel">'+opts+'</select></div>'
+   +'<div class="sqhint">Edit a name, change a shirt number, remove a player, or add a new one. '
+   +'Saving updates the board for everyone instantly.</div>'
+   +'<div class="sqedit" id="sqList"></div>'
+   +'<div class="sqfoot">'
+   +'<button class="btn" id="sqAdd">+ Add player</button>'
+   +'<button class="btn solid" id="sqSave">Save squad</button></div>'
+   +'<div class="sqfoot"><button class="btn" id="sqReset">Restore original list</button></div>'
+   +'</div>', true);
+
+  drawSqList();
+  $('#sqTeamSel').addEventListener('change', e => { sqTeam = e.target.value; drawSqList(); });
+  $('#sqAdd').addEventListener('click', () => {
+    const rows = collectSq(); rows.push(['','']);
+    renderSqRows(rows);
+  });
+  $('#sqSave').addEventListener('click', saveSquad);
+  $('#sqReset').addEventListener('click', resetSquad);
+}
+
+function currentRows(){
+  const kit = KIT[sqTeam] || {};
+  return squadOf(sqTeam).map(p => {
+    const k = kit[p[0]];
+    return [p[0], (k && k[0]) ? k[0] : (p[2] || '')];
+  });
+}
+function renderSqRows(rows){
+  $('#sqList').innerHTML = rows.map((r,i) =>
+    '<div class="sqrow" data-i="'+i+'">'
+    +'<input class="no" value="'+esc(r[1])+'" placeholder="No." maxlength="3">'
+    +'<input class="nm" value="'+esc(r[0])+'" placeholder="Player name">'
+    +'<button class="del" title="Remove">&times;</button></div>').join('');
+  $$('#sqList .del').forEach(b => b.addEventListener('click', e => {
+    const rows2 = collectSq();
+    rows2.splice(+e.target.closest('.sqrow').dataset.i, 1);
+    renderSqRows(rows2);
+  }));
+}
+function drawSqList(){ renderSqRows(currentRows()); }
+
+function collectSq(){
+  return $$('#sqList .sqrow').map(r => [
+    r.querySelector('.nm').value.trim(),
+    r.querySelector('.no').value.trim()
+  ]);
+}
+
+async function saveSquad(){
+  const rows = collectSq().filter(r => r[0]);
+  if(!rows.length){ toast('Add at least one player','bad'); return; }
+
+  /* store name + shirt number together so both travel through Firebase */
+  state.squads = state.squads || {};
+  state.squads[sqTeam] = rows.map(r => [r[0], '', r[1]]);
+
+  /* keep KIT in step so the number shows on the roster line */
+  KIT[sqTeam] = {};
+  rows.forEach(r => { if(r[1]) KIT[sqTeam][r[0]] = [r[1], '']; });
+
+  await pushState();
+  renderAll();
+  closeVeil();
+  toast('Squad updated for everyone');
+}
+
+async function resetSquad(){
+  if(state.squads) delete state.squads[sqTeam];
+  await pushState();
+  renderAll();
+  drawSqList();
+  toast('Restored the original list');
 }
 
 $('#btnAdmin').addEventListener('click',toggleAdmin);
@@ -1986,6 +2146,8 @@ $('#mAdmin').addEventListener('click',toggleAdmin);
   $('#instClose').addEventListener('click', closeIOSSheet);
   $('#instVeil').addEventListener('click', closeIOSSheet);
 })();
+$('#btnSquads').addEventListener('click',openSquads);
+$('#mSquads').addEventListener('click',openSquads);
 $('#btnNews').addEventListener('click',openNews);
 $('#btnData').addEventListener('click',openData);
 $('#mData').addEventListener('click',openData);
@@ -2063,10 +2225,12 @@ document.addEventListener('keydown',e=>{
   setInterval(async ()=>{
     if(saving || $('#veil').classList.contains('on')) return;
     const before=state.ts;
+    const goalsBefore=JSON.parse(JSON.stringify(state.goals||{}));
     await pullState();
     if(state.ts!==before){
       renderAll();
       if($('#stage').classList.contains('on')){ const k=stIdx; buildBoards(); showBoard(k); }
+      announceGoals(goalsBefore, state.goals);
       toast('Board updated');
     }
   },12000);
