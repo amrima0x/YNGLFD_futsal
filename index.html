@@ -945,7 +945,8 @@ const TEAMS = {
   rangers : { name:'Rangers FC',  ini:'RNG', pri:'#0A4A45', sec:'#9FE3D5', group:'B', captain:'Mohammed Bawazeer',   mobile:'+966 55 992 5613' },
   thunder : { name:'Thunder FC',  ini:'THD', pri:'#4A2472', sec:'#E0C3F5', group:'A', captain:'Raad Najjar',        mobile:'+966 55 564 5133' },
   elite   : { name:'Elite FC',    ini:'ELT', pri:'#B34700', sec:'#FFD9A0', group:'B', captain:'Abdulrahman Alhajouri', mobile:'+966 56 596 0990', manager:'Khalil Awaji' },
-  lions   : { name:'Lions FC',    ini:'LIO', pri:'#243447', sec:'#E0B159', group:'B', captain:'Bandar Almadani',     mobile:'+966 55 613 7737' }
+  lions   : { name:'Lions FC',    ini:'LIO', pri:'#243447', sec:'#E0B159', group:'B', captain:'Bandar Almadani',     mobile:'+966 55 613 7737' },
+  sharks  : { name:'Sharks FC',   ini:'SHK', pri:'#1F6F8B', sec:'#BFE6F0', group:'A', captain:'',                    mobile:'' }
 };
 
 const SQUADS = {
@@ -960,7 +961,7 @@ const SQUADS = {
   vipers :[['Ali Alshehri','768421'],['Ahmed Bin Qurban','811895'],['Nayif Alhobaishy','752703'],
            ['Murad Sakran','764231'],['Badr Aljohani','299504'],['Khalid Almarwani','296547'],
            ['Abdulaziz Hejori','749134'],['Mohammed Alahmadi','796050'],['Suhail Aljohani','796037']],
-  eagles :[['Ammar Barzeeq','816255'],['Firas Alhubaishi','811253'],['Abdulrahman Mirza','782996'],
+  eagles :[['Ammar Barzeeq','816255'],['Firas Alhubaishi','811253'],['Abdullah Alsheikhi',''],
            ['Abdulrahman Alziyadi',''],['Abdulrahman Alfayedi','775654'],['Mohammed Aljohani','774996'],
            ['Turki Jameel Aldeen','811373'],['Ahmed Albalawi (GK)','783447'],['Mazen Almustadi','769583']],
   warriors:[['Nawaf Alotaibi','820706'],['Ali Alharbi',''],['Muath Alnazzawi','826591'],
@@ -977,7 +978,8 @@ const SQUADS = {
            ['Ramez Aljohani',''],['Mohammed Alsubhi',''],['Abdulaziz Aloteeq (GK)','']],
   lions:[['Abdullah Aloufi','753487'],['Bandar Almadani','759844'],['Mohammed Balharith','750780'],
            ['Mohammed Bin Salman','758325'],['Anas Basha','758289'],['Basem Alsubhi','287454'],
-           ['Faisal Alfazi','748742'],['Abdullah Alhazmi','760952'],['Mohammed Alsinani','757445']]
+           ['Faisal Alfazi','748742'],['Abdullah Alhazmi','760952'],['Mohammed Alsinani','757445']],
+  sharks:[['',''],['',''],['',''],['',''],['',''],['',''],['',''],['',''],['','']]
 };
 
 /* Shirt number + size per player. Teams not listed have no kit data yet. */
@@ -1084,7 +1086,7 @@ const KIT = {
   eagles: {
     'Ammar Barzeeq':        ['13','L'],
     'Firas Alhubaishi':     ['3','M'],
-    'Abdulrahman Mirza':    ['20','L'],
+    'Abdullah Alsheikhi':   ['20','L'],
     'Abdulrahman Alziyadi': ['11','L'],
     'Abdulrahman Alfayedi': ['28','M'],
     'Mohammed Aljohani':    ['10','L'],
@@ -1114,14 +1116,19 @@ const FIXTURES = [
   { md:9 , date:'2026-10-12', time:'20:00', g:'A', h:'legends', a:'falcons' },
   { md:9 , date:'2026-10-12', time:'21:00', g:'B', h:'elite', a:'rangers' },
   { md:10, date:'2026-10-14', time:'20:00', g:'A', h:'thunder', a:'titans' },
-  { md:10, date:'2026-10-14', time:'21:00', g:'B', h:'vipers', a:'warriors' }
+  { md:10, date:'2026-10-14', time:'21:00', g:'B', h:'vipers', a:'warriors' },
+  { md:3,  date:'2026-09-07', time:'19:00', g:'A', h:'sharks', a:'thunder' },
+  { md:5,  date:'2026-09-14', time:'19:00', g:'A', h:'sharks', a:'falcons' },
+  { md:7,  date:'2026-10-05', time:'19:00', g:'A', h:'sharks', a:'titans' },
+  { md:9,  date:'2026-10-12', time:'19:00', g:'A', h:'sharks', a:'eagles' },
+  { md:11, date:'2026-10-19', time:'20:00', g:'A', h:'sharks', a:'legends' }
 ];
 
 const KO_TIES = [
-  { id:'sf1',   label:'Semi-final 1', date:'2026-10-19', time:'20:00', hSrc:['A',1],     aSrc:['B',2] },
-  { id:'sf2',   label:'Semi-final 2', date:'2026-10-19', time:'21:00', hSrc:['B',1],     aSrc:['A',2] },
-  { id:'third', label:'Third place',  date:'2026-10-21', time:'20:00', hSrc:['L','sf1'], aSrc:['L','sf2'] },
-  { id:'final', label:'Final',        date:'2026-10-21', time:'21:00', hSrc:['W','sf1'], aSrc:['W','sf2'] }
+  { id:'sf1',   label:'Semi-final 1', date:'2026-10-26', time:'20:00', hSrc:['A',1],     aSrc:['B',2] },
+  { id:'sf2',   label:'Semi-final 2', date:'2026-10-26', time:'21:00', hSrc:['B',1],     aSrc:['A',2] },
+  { id:'third', label:'Third place',  date:'2026-10-28', time:'20:00', hSrc:['L','sf1'], aSrc:['L','sf2'] },
+  { id:'final', label:'Final',        date:'2026-10-28', time:'21:00', hSrc:['W','sf1'], aSrc:['W','sf2'] }
 ];
 
 /* ==================================================================
