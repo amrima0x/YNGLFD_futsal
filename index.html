@@ -393,6 +393,69 @@ body.admin .edit-dot{display:flex}
   aspect-ratio:1002/1125;background:var(--logo) center/contain no-repeat;
   opacity:.12;pointer-events:none;z-index:0}
 
+
+/* ---------- match summary card ---------- */
+.see-dot{position:absolute;top:8px;right:52px;width:34px;height:34px;border-radius:9px;
+  background:rgba(150,153,2,.18);border:1px solid rgba(150,153,2,.5);color:var(--lime);
+  font-size:.95rem;cursor:pointer;line-height:1}
+.see-dot:hover{background:rgba(150,153,2,.34)}
+.sum{background:var(--ink);border-radius:16px;overflow:hidden}
+.sum-top{background:linear-gradient(180deg,var(--navy),var(--navy-2));padding:22px 20px 18px;
+  text-align:center;border-bottom:2px solid rgba(150,153,2,.34)}
+.sum-top .eb{font-family:var(--cond);font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--lime)}
+.sum-vs{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:14px}
+.sum-vs .sd{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px}
+.sum-vs .sd svg{width:76px;height:76px}
+.sum-vs .sd b{font-family:var(--disp);font-size:1.15rem;text-transform:uppercase;text-align:center;
+  line-height:1.05}
+.sum-vs .nums{flex:none;display:flex;align-items:center;gap:12px}
+.sum-vs .nums span{font-family:var(--disp);font-size:2.9rem;line-height:1}
+.sum-vs .nums u{text-decoration:none;font-family:var(--disp);font-size:1.3rem;color:var(--muted)}
+.sum-vs .win{color:var(--lime)}
+.sum-verdict{margin-top:12px;font-family:var(--cond);font-weight:700;font-size:.9rem;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--rust)}
+.sum-cols{display:grid;grid-template-columns:1fr 1fr}
+.sum-cols>div{padding:18px 18px 20px;min-width:0}
+.sum-cols>div:first-child{border-right:1px solid rgba(126,147,160,.16)}
+@media(max-width:700px){
+  .sum-cols{grid-template-columns:1fr}
+  .sum-cols>div:first-child{border-right:0;border-bottom:1px solid rgba(126,147,160,.16)}
+}
+.sum-cols h5{font-family:var(--cond);font-weight:700;font-size:.8rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--lime);margin-bottom:12px}
+.sum-cols ul{list-style:none;display:flex;flex-direction:column;gap:9px}
+.sum-cols li{display:flex;align-items:center;gap:10px;font-size:1.02rem;white-space:nowrap}
+.sum-cols li .n{font-family:var(--disp);font-size:.9rem;width:34px;text-align:center;
+  color:var(--olive);flex:none}
+.sum-cols li>span:nth-child(2){overflow:hidden;text-overflow:ellipsis}
+.sum-cols li .v{margin-left:auto;font-family:var(--disp);color:var(--lime);flex:none;
+  padding-left:8px}
+.sum-cols .none{font-size:.9rem;color:var(--muted);letter-spacing:.06em}
+.sum-disc{border-top:1px solid rgba(126,147,160,.18);padding:16px 18px;display:flex;
+  align-items:flex-start;gap:14px;flex-wrap:wrap}
+.sum-disc .lbl{font-family:var(--cond);font-weight:700;font-size:.78rem;letter-spacing:.2em;
+  text-transform:uppercase;color:#E8C84A;flex:none;padding-top:3px}
+.sum-disc .items{display:flex;gap:16px;flex-wrap:wrap;font-size:.98rem}
+.sum-disc i{font-style:normal;display:inline-flex;align-items:center;gap:8px}
+.sum-disc .yc{width:14px;height:19px;background:#E8C84A;border-radius:2px;display:inline-block}
+.sum-disc .rc{width:14px;height:19px;background:#D33;border-radius:2px;display:inline-block}
+.sum-mvp{border-top:1px solid rgba(126,147,160,.18);padding:18px;display:flex;
+  align-items:center;gap:16px;background:rgba(150,153,2,.08)}
+.sum-mvp svg{width:56px;height:56px;flex:none}
+.sum-mvp .t{flex:1;min-width:0}
+.sum-mvp .t span{display:block;font-family:var(--cond);font-size:.78rem;letter-spacing:.26em;
+  text-transform:uppercase;color:#E6C678}
+.sum-mvp .t b{display:block;font-family:var(--disp);font-size:1.4rem;margin-top:5px;
+  text-transform:uppercase}
+.sum-mvp .t small{display:block;font-size:.88rem;color:var(--muted);margin-top:3px}
+.sum-foot{padding:14px 18px;text-align:center;font-family:var(--cond);font-size:.8rem;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--muted);
+  border-top:1px solid rgba(126,147,160,.18)}
+.mvp-pick{margin-top:14px}
+.mvp-pick label{display:block;font-family:var(--cond);font-size:.78rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+
 /* ---------- squad editor ---------- */
 select.sel{width:100%;background:var(--ink);border:1px solid rgba(150,153,2,.35);
   color:var(--bone);border-radius:10px;padding:12px 14px;font-family:var(--cond);
@@ -980,8 +1043,8 @@ const SQUADS = {
   lions:[['Abdullah Aloufi','753487'],['Bandar Almadani','759844'],['Mohammed Balharith','750780'],
            ['Mohammed Bin Salman','758325'],['Anas Basha','758289'],['Basem Alsubhi','287454'],
            ['Faisal Alfazi','748742'],['Abdullah Alhazmi','760952'],['Mohammed Alsinani','757445']],
-  sharks:[['',''],['',''],['',''],['',''],['',''],['',''],['',''],['',''],['','']],
-  spartans:[['',''],['',''],['',''],['',''],['',''],['',''],['',''],['',''],['','']]
+  sharks:[['Ahmed Dawood',''],['Hamzah Shuaib','816487'],['Musab Alharbi',''],['Abdullah Aidroos',''],['Osama Aljohani',''],['Sulaiman Almani','840350'],['Ahmed Mugheeth','897856'],['Rayan Alhindi','836642'],['Muayad Bahaidan','831492'],['Albaraa Halawani','754640']],
+  spartans:[['Muath Alessa',''],['Abdullah Khayat',''],['Abdulaziz Alghamdi',''],['Khalid Alqarni',''],['Hani',''],['Mohammed Alzahrani',''],['Hussam Alghamdi',''],['Abdulaziz Abu Battal',''],['Eyad Aljohani',''],['Hamad Alsayed',''],['Mohammed Aldaqeel','']]
 };
 
 /* Shirt number + size per player. Teams not listed have no kit data yet. */
@@ -1052,6 +1115,31 @@ const KIT = {
     'Faisal Aljohani':     ['18','M'],
     'Zuhair Zulaly':       ['17','L']
   },
+  sharks: {
+    'Ahmed Dawood':       ['2','L'],
+    'Hamzah Shuaib':      ['15','XL'],
+    'Musab Alharbi':      ['9','XL'],
+    'Abdullah Aidroos':   ['4','L'],
+    'Osama Aljohani':     ['24','L'],
+    'Sulaiman Almani':    ['12','XL'],
+    'Ahmed Mugheeth':     ['6','XL'],
+    'Rayan Alhindi':      ['28','XXL'],
+    'Muayad Bahaidan':    ['13','L'],
+    'Albaraa Halawani':   ['17','XXL']
+  },
+  spartans: {
+    'Muath Alessa':           ['3','M'],
+    'Abdullah Khayat':        ['4','L'],
+    'Abdulaziz Alghamdi':     ['5','M'],
+    'Khalid Alqarni':         ['6','L'],
+    'Hani':                   ['7','L'],
+    'Mohammed Alzahrani':     ['8','XL'],
+    'Hussam Alghamdi':        ['9','M'],
+    'Abdulaziz Abu Battal':   ['11','L'],
+    'Eyad Aljohani':          ['13','XL'],
+    'Hamad Alsayed':          ['15','M'],
+    'Mohammed Aldaqeel':      ['24','M']
+  },
   thunder: {
     'Mohammed A Aljohani': ['9','M'],
     'Hashim M Dhahri':     ['6','M'],
@@ -1099,50 +1187,50 @@ const KIT = {
 };
 
 const FIXTURES = [
-  { md:1 , date:'2026-08-31', time:'20:00', g:'A', h:'falcons', a:'titans' },
-  { md:1 , date:'2026-08-31', time:'21:00', g:'B', h:'rangers', a:'warriors' },
-  { md:2 , date:'2026-09-02', time:'20:00', g:'A', h:'eagles', a:'thunder' },
-  { md:2 , date:'2026-09-02', time:'21:00', g:'B', h:'lions', a:'vipers' },
-  { md:3 , date:'2026-09-07', time:'19:00', g:'A', h:'legends', a:'titans' },
-  { md:3 , date:'2026-09-07', time:'20:00', g:'A', h:'sharks', a:'thunder' },
-  { md:3 , date:'2026-09-07', time:'21:00', g:'B', h:'elite', a:'warriors' },
+  { md:1 , date:'2026-08-31', time:'19:00', g:'A', h:'falcons', a:'titans' },
+  { md:1 , date:'2026-08-31', time:'20:00', g:'B', h:'rangers', a:'warriors' },
+  { md:2 , date:'2026-09-02', time:'19:00', g:'A', h:'eagles', a:'thunder' },
+  { md:2 , date:'2026-09-02', time:'20:00', g:'B', h:'lions', a:'vipers' },
+  { md:3 , date:'2026-09-07', time:'19:00', g:'A', h:'legends', a:'sharks' },
+  { md:3 , date:'2026-09-07', time:'20:00', g:'B', h:'elite', a:'spartans' },
   { md:4 , date:'2026-09-09', time:'19:00', g:'A', h:'falcons', a:'eagles' },
-  { md:4 , date:'2026-09-09', time:'20:00', g:'B', h:'spartans', a:'vipers' },
-  { md:4 , date:'2026-09-09', time:'21:00', g:'B', h:'rangers', a:'lions' },
-  { md:5 , date:'2026-09-14', time:'19:00', g:'A', h:'legends', a:'thunder' },
-  { md:5 , date:'2026-09-14', time:'20:00', g:'A', h:'titans', a:'eagles' },
-  { md:5 , date:'2026-09-14', time:'21:00', g:'B', h:'elite', a:'vipers' },
-  { md:6 , date:'2026-09-16', time:'19:00', g:'A', h:'sharks', a:'falcons' },
-  { md:6 , date:'2026-09-16', time:'20:00', g:'B', h:'warriors', a:'lions' },
-  { md:6 , date:'2026-09-16', time:'21:00', g:'B', h:'spartans', a:'rangers' },
-  { md:7 , date:'2026-10-05', time:'19:00', g:'A', h:'legends', a:'eagles' },
-  { md:7 , date:'2026-10-05', time:'20:00', g:'A', h:'thunder', a:'falcons' },
-  { md:7 , date:'2026-10-05', time:'21:00', g:'B', h:'elite', a:'lions' },
-  { md:8 , date:'2026-10-07', time:'19:00', g:'A', h:'titans', a:'sharks' },
-  { md:8 , date:'2026-10-07', time:'20:00', g:'B', h:'vipers', a:'rangers' },
-  { md:8 , date:'2026-10-07', time:'21:00', g:'B', h:'warriors', a:'spartans' },
-  { md:9 , date:'2026-10-12', time:'19:00', g:'A', h:'legends', a:'falcons' },
-  { md:9 , date:'2026-10-12', time:'20:00', g:'A', h:'eagles', a:'sharks' },
-  { md:9 , date:'2026-10-12', time:'21:00', g:'B', h:'elite', a:'rangers' },
-  { md:10, date:'2026-10-14', time:'19:00', g:'A', h:'thunder', a:'titans' },
-  { md:10, date:'2026-10-14', time:'20:00', g:'B', h:'lions', a:'spartans' },
-  { md:10, date:'2026-10-14', time:'21:00', g:'B', h:'vipers', a:'warriors' },
-  { md:11, date:'2026-10-19', time:'20:00', g:'A', h:'legends', a:'sharks' },
-  { md:11, date:'2026-10-19', time:'21:00', g:'B', h:'elite', a:'spartans' }
+  { md:4 , date:'2026-09-09', time:'20:00', g:'B', h:'rangers', a:'lions' },
+  { md:5 , date:'2026-09-14', time:'19:00', g:'A', h:'titans', a:'thunder' },
+  { md:5 , date:'2026-09-14', time:'20:00', g:'B', h:'warriors', a:'vipers' },
+  { md:6 , date:'2026-09-16', time:'19:00', g:'A', h:'falcons', a:'legends' },
+  { md:6 , date:'2026-09-16', time:'20:00', g:'B', h:'rangers', a:'elite' },
+  { md:7 , date:'2026-10-05', time:'19:00', g:'A', h:'titans', a:'sharks' },
+  { md:7 , date:'2026-10-05', time:'20:00', g:'B', h:'warriors', a:'spartans' },
+  { md:8 , date:'2026-10-07', time:'19:00', g:'A', h:'eagles', a:'legends' },
+  { md:8 , date:'2026-10-07', time:'20:00', g:'B', h:'lions', a:'elite' },
+  { md:9 , date:'2026-10-12', time:'19:00', g:'A', h:'thunder', a:'sharks' },
+  { md:9 , date:'2026-10-12', time:'20:00', g:'B', h:'vipers', a:'spartans' },
+  { md:10, date:'2026-10-14', time:'19:00', g:'A', h:'titans', a:'eagles' },
+  { md:10, date:'2026-10-14', time:'20:00', g:'B', h:'warriors', a:'lions' },
+  { md:11, date:'2026-10-19', time:'19:00', g:'A', h:'falcons', a:'thunder' },
+  { md:11, date:'2026-10-19', time:'20:00', g:'B', h:'rangers', a:'vipers' },
+  { md:12, date:'2026-10-21', time:'19:00', g:'A', h:'titans', a:'legends' },
+  { md:12, date:'2026-10-21', time:'20:00', g:'B', h:'warriors', a:'elite' },
+  { md:13, date:'2026-10-26', time:'19:00', g:'A', h:'falcons', a:'sharks' },
+  { md:13, date:'2026-10-26', time:'20:00', g:'B', h:'rangers', a:'spartans' },
+  { md:14, date:'2026-10-28', time:'19:00', g:'A', h:'thunder', a:'legends' },
+  { md:14, date:'2026-10-28', time:'20:00', g:'B', h:'vipers', a:'elite' },
+  { md:15, date:'2026-11-02', time:'19:00', g:'A', h:'eagles', a:'sharks' },
+  { md:15, date:'2026-11-02', time:'20:00', g:'B', h:'lions', a:'spartans' }
 ];
 
 const KO_TIES = [
-  { id:'sf1',   label:'Semi-final 1', date:'2026-10-21', time:'20:00', hSrc:['A',1],     aSrc:['B',2] },
-  { id:'sf2',   label:'Semi-final 2', date:'2026-10-21', time:'21:00', hSrc:['B',1],     aSrc:['A',2] },
-  { id:'third', label:'Third place',  date:'2026-10-26', time:'20:00', hSrc:['L','sf1'], aSrc:['L','sf2'] },
-  { id:'final', label:'Final',        date:'2026-10-26', time:'21:00', hSrc:['W','sf1'], aSrc:['W','sf2'] }
+  { id:'sf1',   label:'Semi-final 1', date:'2026-11-04', time:'19:00', hSrc:['A',1],     aSrc:['B',2] },
+  { id:'sf2',   label:'Semi-final 2', date:'2026-11-04', time:'20:00', hSrc:['B',1],     aSrc:['A',2] },
+  { id:'third', label:'Third place',  date:'2026-11-09', time:'19:00', hSrc:['L','sf1'], aSrc:['L','sf2'] },
+  { id:'final', label:'Final',        date:'2026-11-09', time:'20:00', hSrc:['W','sf1'], aSrc:['W','sf2'] }
 ];
 
 /* ==================================================================
    2 · SHARED STATE
    ================================================================== */
 const SKEY = 'ynglfd-futsal-2026';
-let state = { results:{}, ko:{}, goals:{}, cards:{}, squads:{}, news:'', ts:0 };
+let state = { results:{}, ko:{}, goals:{}, cards:{}, squads:{}, mvp:{}, news:'', ts:0 };
 let admin = false, saving = false;
 
 /* ---------- Firebase Realtime Database (works on any host) ----------
@@ -1184,7 +1272,7 @@ let srcMode='none';
 function adopt(inc){
   if(!inc) return false;
   if(!inc.ts || inc.ts >= (state.ts||0)){
-    state = Object.assign({results:{},ko:{},goals:{},cards:{},squads:{},news:'',ts:0}, inc);
+    state = Object.assign({results:{},ko:{},goals:{},cards:{},squads:{},mvp:{},news:'',ts:0}, inc);
     return true;
   }
   return false;
@@ -1211,7 +1299,7 @@ async function pullState(){
     const inc = snap.val();
     if(inc){
       if(!inc.ts || inc.ts >= (state.ts||0))
-        state = Object.assign({results:{},ko:{},goals:{},cards:{},squads:{},news:'',ts:0}, inc);
+        state = Object.assign({results:{},ko:{},goals:{},cards:{},squads:{},mvp:{},news:'',ts:0}, inc);
     }
   }catch(e){ /* first run: key not created yet */ }
   srcMode='cloud';
@@ -1548,6 +1636,7 @@ function matchRow(i){
     +'<span class="pend">'+clock12(f.time)+'</span></div>'
     +'<div class="t right" data-team="'+f.a+'"><b>'+esc(TEAMS[f.a].name)+'</b>'+crest(f.a,30)+'</div>'
     +'<div class="time">'+clock12(f.time)+'</div>'
+    +(done?'<button class="see-dot" data-see="'+i+'" title="Match summary">▦</button>':'')
     +'<button class="edit-dot" data-fx="'+i+'" title="Match report">✎</button>'
     +scorerLine(i)+'</div>';
 }
@@ -1567,6 +1656,7 @@ function renderFixtures(host,limit){
       +idxs.map(matchRow).join('')+'</div>';
   }).join('');
   $$('.edit-dot',host).forEach(b=>b.addEventListener('click',()=>openMatch(+b.dataset.fx)));
+  $$('.see-dot',host).forEach(b=>b.addEventListener('click',()=>openSummary(+b.dataset.see)));
   $$('.t[data-team]',host).forEach(el=>el.addEventListener('click',()=>openTeam(el.dataset.team)));
 }
 
@@ -1677,6 +1767,101 @@ function toggleAdmin(){
 }
 
 let draft=null, mSide='h';
+
+/* ==================================================================
+   MATCH SUMMARY  — tap a finished match to see everything that happened
+   ================================================================== */
+function shirtNo(tk,nm){
+  const p=squadOf(tk).find(x=>x[0]===nm);
+  if(p && p[2]) return p[2];
+  const k=(KIT[tk]||{})[nm];
+  return k && k[0] ? k[0] : '';
+}
+function matchScorers(i,tk){
+  const out=[];
+  squadOf(tk).forEach((p,pi)=>{
+    const g=(state.goals[gKey(tk,pi)]||{})[i];
+    if(g) out.push({name:p[0].replace(/\s*\(GK\)$/,''), no:shirtNo(tk,p[0]), goals:g});
+  });
+  return out.sort((a,b)=>b.goals-a.goals);
+}
+function matchCards(i,tk){
+  const out=[];
+  squadOf(tk).forEach((p,pi)=>{
+    const c=state.cards[gKey(tk,pi)]||{y:0,r:0};
+    for(let x=0;x<(c.y||0);x++) out.push({name:p[0],no:shirtNo(tk,p[0]),type:'y'});
+    for(let x=0;x<(c.r||0);x++) out.push({name:p[0],no:shirtNo(tk,p[0]),type:'r'});
+  });
+  return out;
+}
+function scorerList(rows){
+  if(!rows.length) return '<div class="none">No goals</div>';
+  return '<ul>'+rows.map(r=>'<li><span class="n">'+esc(r.no||'—')+'</span>'
+    +'<span>'+esc(r.name)+'</span><span class="v">'+'⚽'.repeat(Math.min(r.goals,3))
+    +' '+r.goals+'</span></li>').join('')+'</ul>';
+}
+function openSummary(i){
+  const f=FIXTURES[i], r=res(i);
+  if(!r){ toast('This match has not been played yet'); return; }
+  const hw = r.hs>r.as ? 'win':'', aw = r.as>r.hs ? 'win':'';
+  const verdict = r.hs===r.as ? 'Full time · Draw'
+        : 'Full time · '+(r.hs>r.as?TEAMS[f.h].name:TEAMS[f.a].name).replace(' FC','')+' win';
+
+  const cds = matchCards(i,f.h).concat(matchCards(i,f.a));
+  const disc = cds.length
+    ? '<div class="sum-disc"><span class="lbl">Discipline</span><div class="items">'
+      + cds.map(c=>'<i><span class="'+(c.type==='y'?'yc':'rc')+'"></span>'
+        + esc(c.name)+'</i>').join('')+'</div></div>'
+    : '';
+
+  const mv = (state.mvp||{})[i];
+  let mvpHTML='';
+  if(mv){
+    const [tk,pi]=mv.split(':');
+    const p=squadOf(tk)[+pi];
+    if(p) mvpHTML='<div class="sum-mvp">'+crest(tk,56)
+      +'<div class="t"><span>★ Man of the match</span><b>'+esc(p[0].replace(/\s*\(GK\)$/,''))
+      +'</b><small>'+esc(TEAMS[tk].name)
+      +(shirtNo(tk,p[0])?' · No. '+shirtNo(tk,p[0]):'')+'</small></div></div>';
+  }
+
+  let pick='';
+  if(admin){
+    const opts=['<option value="">— none —</option>'];
+    [f.h,f.a].forEach(tk=>squadOf(tk).forEach((p,pi)=>{
+      const k=tk+':'+pi;
+      opts.push('<option value="'+k+'"'+(mv===k?' selected':'')+'>'
+        +esc(TEAMS[tk].name.replace(' FC',''))+' — '+esc(p[0])+'</option>');
+    }));
+    pick='<div class="mvp-pick"><label>Man of the match</label>'
+      +'<select id="mvpSel" class="sel">'+opts.join('')+'</select></div>';
+  }
+
+  openVeil('<div class="modal-h"><h3>Match summary</h3><button class="btn sm x">Close</button></div>'
+   +'<div class="modal-b"><div class="sum">'
+   +'<div class="sum-top"><div class="eb">MD '+f.md+' · Group '+f.g+' · '+longDate(f)+'</div>'
+   +'<div class="sum-vs">'
+   +'<div class="sd">'+crest(f.h,76)+'<b>'+esc(TEAMS[f.h].name.replace(' FC',''))+'</b></div>'
+   +'<div class="nums"><span class="'+hw+'">'+r.hs+'</span><u>–</u>'
+   +'<span class="'+aw+'">'+r.as+'</span></div>'
+   +'<div class="sd">'+crest(f.a,76)+'<b>'+esc(TEAMS[f.a].name.replace(' FC',''))+'</b></div>'
+   +'</div><div class="sum-verdict">'+esc(verdict)+'</div></div>'
+   +'<div class="sum-cols">'
+   +'<div><h5>'+esc(TEAMS[f.h].name.replace(' FC',''))+' scorers</h5>'+scorerList(matchScorers(i,f.h))+'</div>'
+   +'<div><h5>'+esc(TEAMS[f.a].name.replace(' FC',''))+' scorers</h5>'+scorerList(matchScorers(i,f.a))+'</div>'
+   +'</div>'+disc+mvpHTML
+   +'<div class="sum-foot">Indoor Futsal Court — Yanbu</div>'
+   +'</div>'+pick+'</div>', true);
+
+  const sel=$('#mvpSel');
+  if(sel) sel.addEventListener('change', async e=>{
+    state.mvp = state.mvp || {};
+    if(e.target.value) state.mvp[i]=e.target.value; else delete state.mvp[i];
+    await pushState(); renderAll(); openSummary(i);
+    toast('Man of the match saved');
+  });
+}
+
 function openMatch(i){
   if(!admin){ toast('Organiser code needed','bad'); return; }
   const r=res(i)||{hs:null,as:null};
