@@ -235,6 +235,27 @@ body.admin #galAdd,body.admin #paperAdd{display:inline-block}
 body.admin .gph .del{display:block}
 .lightbox img{width:100%;height:auto;display:block;border-radius:6px}
 .lb-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px}
+.latest{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:20px;align-items:start}
+.latest .lcov{position:relative;border:1px solid var(--slate);border-radius:14px;overflow:hidden;aspect-ratio:3/4;
+  background:linear-gradient(160deg,var(--navy-2),var(--ink));cursor:pointer;box-shadow:0 10px 28px rgba(10,16,40,.14)}
+.latest .lcov img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+.latest .lcov .no{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px}
+.latest .lcov .no b{font-family:var(--display);font-size:3rem;color:var(--lime);line-height:1}
+.latest .lcov .no span{font-family:var(--cond);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.latest .lcov .open{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 11px;text-align:center;
+  font-family:var(--cond);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:#fff;
+  background:linear-gradient(to top,rgba(8,12,30,.82),rgba(8,12,30,0))}
+.latest .lbd{display:flex;flex-direction:column;gap:9px;padding-top:4px}
+.latest .lbd .tagline{align-self:flex-start;font-family:var(--cond);font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;
+  color:#fff;background:linear-gradient(90deg,#6CC024,#24A8E4);padding:5px 11px;border-radius:999px}
+.latest .lbd .imeta{font-family:var(--cond);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--lime)}
+.latest .lbd h3{font-family:var(--display);font-size:1.5rem;line-height:1.2;letter-spacing:.01em}
+.latest .lbd p{color:var(--muted);line-height:1.6;font-size:.9rem}
+.latest .lbd .row{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:4px}
+.issue .cov[data-read]{cursor:pointer}
+@media(max-width:700px){.latest{grid-template-columns:1fr;gap:14px}
+ .latest .lcov{max-width:300px;margin:0 auto;width:100%} .latest .lbd{align-items:flex-start}
+ .latest .lbd h3{font-size:1.25rem}}
 .issues{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
 .issue{border:1px solid var(--slate);border-radius:12px;overflow:hidden;background:var(--navy);display:flex;flex-direction:column}
 .issue .cov{aspect-ratio:3/4;background:linear-gradient(160deg,var(--navy-2),var(--ink));position:relative;overflow:hidden}
@@ -245,7 +266,7 @@ body.admin .gph .del{display:block}
 .issue .cov .no b{font-family:var(--display);font-size:2.6rem;color:var(--lime);line-height:1}
 .issue .cov .no span{font-family:var(--cond);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
 .issue .bd{padding:13px 14px 15px;display:flex;flex-direction:column;gap:7px;flex:1}
-.issue .bd .mt{font-family:var(--cond);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);border:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.issue .bd .imeta{font-family:var(--cond);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--lime);border:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .issue .bd h4{font-family:var(--display);font-size:1.02rem;letter-spacing:.02em;line-height:1.25}
 .issue .bd p{font-size:.84rem;color:var(--muted);line-height:1.5;flex:1}
 .issue .bd .row{display:flex;gap:8px;align-items:center}
@@ -3852,18 +3873,40 @@ function renderPaper(){
     host.innerHTML='<div class="empty-note">No issues yet'+(admin?' — use “Add an issue” to publish the first one':'')+'</div>';
     return;
   }
-  host.innerHTML='<div class="issues">'+list.map(it=>{
-    const cv = it.cover || (driveId(it.url)?it.url:'');
-    const cover = cv ? '<img loading="lazy" src="'+esc(imgSrc(cv,700))+'" alt="Room 214 issue '+esc(it.no||'')+'"'+imgFb(cv,700)+'>'
-      : '<div class="no"><b>'+esc(it.no||'214')+'</b><span>Issue</span></div>';
-    return '<div class="issue"><div class="cov">'+cover+'</div><div class="bd">'
-      +'<span class="mt">Issue '+esc(it.no||'—')+(it.date?(' · '+esc(it.date)):'')+'</span>'
-      +'<h4>'+esc(it.title||'Room 214')+'</h4>'
-      +(it.note?'<p>'+esc(it.note)+'</p>':'<p></p>')
-      +'<div class="row">'+(it.url?'<a class="btn solid" href="'+esc(it.url)+'" target="_blank" rel="noopener">Read</a>':'')
-      +(admin?'<button class="btn sm pDel" data-id="'+esc(it.id)+'">Remove</button>':'')
-      +'</div></div></div>';
-  }).join('')+'</div>';
+  /* the cover picture: the one that was given, otherwise page 1 of the PDF */
+  const coverOf = it => it.cover || (driveId(it.url) ? it.url : '');
+  const coverImg = (it,w) => {
+    const cv=coverOf(it);
+    return cv ? '<img loading="lazy" src="'+esc(imgSrc(cv,w))+'" alt="Room 214 issue '+esc(it.no||'')+'"'+imgFb(cv,w)+'>'
+              : '<div class="no"><b>'+esc(it.no||'214')+'</b><span>Issue</span></div>';
+  };
+  const readBtn = (it,cls) => it.url
+    ? '<a class="btn '+(cls||'solid')+'" href="'+esc(it.url)+'" target="_blank" rel="noopener">Read the issue</a>' : '';
+  const delBtn = it => admin ? '<button class="btn sm pDel" data-id="'+esc(it.id)+'">Remove</button>' : '';
+
+  const top=list[0], rest=list.slice(1);
+  /* the newest issue gets the front page — big cover, open on tap */
+  let html='<div class="latest"><div class="lcov"'+(top.url?' data-read="'+esc(top.url)+'"':'')+'>'+coverImg(top,1100)
+    +(top.url?'<span class="open">Tap to read</span>':'')+'</div>'
+    +'<div class="lbd"><span class="tagline">Latest issue</span>'
+    +'<span class="imeta">Issue '+esc(top.no||'—')+(top.date?(' · '+esc(top.date)):'')+'</span>'
+    +'<h3>'+esc(top.title||'Room 214')+'</h3>'
+    +(top.note?'<p>'+esc(top.note)+'</p>':'')
+    +'<div class="row">'+readBtn(top)+delBtn(top)+'</div></div></div>';
+
+  if(rest.length){
+    html+='<div class="sec-head" style="margin-top:26px"><div><p class="eyebrow">Back issues</p></div></div>'
+      +'<div class="issues">'+rest.map(it=>
+        '<div class="issue"><div class="cov"'+(it.url?' data-read="'+esc(it.url)+'"':'')+'>'+coverImg(it,700)+'</div><div class="bd">'
+        +'<span class="imeta">Issue '+esc(it.no||'—')+(it.date?(' · '+esc(it.date)):'')+'</span>'
+        +'<h4>'+esc(it.title||'Room 214')+'</h4>'
+        +(it.note?'<p>'+esc(it.note)+'</p>':'<p></p>')
+        +'<div class="row">'+readBtn(it,'sm solid')+delBtn(it)+'</div></div></div>').join('')+'</div>';
+  }
+  host.innerHTML=html;
+  $$('#paperList [data-read]').forEach(el=>el.addEventListener('click',()=>{
+    window.open(el.dataset.read,'_blank','noopener');
+  }));
   $$('#paperList .pDel').forEach(b=>b.addEventListener('click',async ()=>{
     state.paper = paperList().filter(x=>x.id!==b.dataset.id);
     await pushState(); renderAll(); toast('Issue removed');
