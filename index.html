@@ -3754,11 +3754,19 @@ function mdLabel(key){
   const r=+key;
   return 'Round '+r+(roundDates(r)?(' · '+roundDates(r)):'');
 }
-/* a stored photo keeps its match day; the gallery groups it into its round */
+/* A photo added from the gallery carries r = the round that was picked.
+   An older photo carries only md = a match day, which is mapped to its round. */
 function mediaKey(m){
-  const v=(m.md==null?'general':m.md);
+  if(m && m.r!=null && m.r!==''){
+    if(m.r==='general'||m.r==='ko') return m.r;
+    const r=+m.r; if(r>=1) return String(r);
+  }
+  const v=(m && m.md!=null) ? m.md : 'general';
   if(v==='general'||v==='ko') return v;
-  return String(roundOf(v)||'general');
+  const n=+v; if(!(n>=1)) return 'general';
+  /* photos added from the gallery store a round; anything past the last round
+     is a match day, which is mapped to the round it belongs to */
+  return String(n<=ROUNDS.length ? n : (roundOf(n)||'general'));
 }
 function renderGallery(){
   const host=$('#gallery'); if(!host) return;
@@ -3803,7 +3811,7 @@ function openPhoto(id){
   let i=Math.max(0,list.findIndex(m=>m.id===id));
   const draw=()=>{
     const m=list[i]; if(!m) return;
-    openVeil('<div class="modal-h"><h3>'+esc(mdLabel(m.md))+'</h3><button class="btn sm x">Close</button></div>'
+    openVeil('<div class="modal-h"><h3>'+esc(mdLabel(mediaKey(m)))+'</h3><button class="btn sm x">Close</button></div>'
      +'<div class="modal-b"><div class="lightbox"><img src="'+esc(imgSrc(m.url,1800))+'" alt="'+esc(m.cap||'Match photo')+'"'+imgFb(m.url,1800)+'></div>'
      +(m.cap?'<p class="pr-hint" style="margin-top:10px">'+esc(m.cap)+'</p>':'')
      +'<div class="lb-nav"><button class="btn" id="lbPrev">‹ Previous</button>'
@@ -3830,8 +3838,9 @@ function openGalleryAdd(){
     const urls=$('#gUrls').value.split('\n').map(cleanLink).filter(Boolean);
     if(!urls.length){ toast('Paste at least one link','bad'); return; }
     const now=Date.now();
+    const key=(md==='general'||md==='ko')?md:+md;
     state.media = mediaList().concat(urls.map((u,n)=>({
-      id:'m'+now+'-'+n, md:((md==='general'||md==='ko')?md:+md), url:u, cap:cap, ts:now+n })));
+      id:'m'+now+'-'+n, r:key, md:key, url:u, cap:cap, ts:now+n })));
     await pushState(); renderAll(); closeVeil();
     toast(urls.length+' photo'+(urls.length>1?'s':'')+' added');
   });
