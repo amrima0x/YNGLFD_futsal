@@ -3731,6 +3731,15 @@ function paperList(){
 const DRIVE_RE = /(?:drive|docs)\.google\.com\/(?:file\/d\/|[^#]*?[?&]id=)([A-Za-z0-9_-]{12,})/i;
 function driveId(u){ const m=DRIVE_RE.exec(u||''); return m?m[1]:''; }
 const isDriveFolder = u => /drive\.google\.com\/(?:drive\/)?(?:u\/\d+\/)?folders\//i.test(u||'');
+/* a link may also be a file sitting next to index.html in the repo,
+   e.g.  room214/issue1.pdf  or  photos/r4/01.jpg  */
+function cleanLink(u){
+  u=(u||'').trim().replace(/^<|>$/g,'');
+  if(!u) return '';
+  if(/^https?:\/\//i.test(u)) return u;
+  if(/^(mailto:|tel:|data:)/i.test(u)) return u;
+  return u.replace(/^\.?\//,'');          /* repo-relative path */
+}
 function imgSrc(u,w){ const id=driveId(u); return id ? ('https://drive.google.com/thumbnail?id='+id+'&sz=w'+(w||1200)) : (u||''); }
 /* if Drive throttles the first endpoint, fall back to the second one */
 function imgFb(u,w){
@@ -3810,15 +3819,15 @@ function openGalleryAdd(){
   const opts=ROUNDS.map((r,i)=>'<option value="'+(i+1)+'">'+esc(mdLabel(i+1))+'</option>').reverse()
     .concat(['<option value="ko">Knockout week</option>','<option value="general">Around the tournament</option>']);
   openVeil('<div class="modal-h"><h3>Add photos</h3><button class="btn sm x">Close</button></div>'
-   +'<div class="modal-b"><p class="pr-hint">Paste the photo links, one per line. Google Drive links work as they are — '
-   +'just set the file to <b>Anyone with the link · Viewer</b> first. A link to a Drive <i>folder</i> shows as an album card instead.</p>'
+   +'<div class="modal-b"><p class="pr-hint">One link per line. Either a file kept beside the site, e.g. <code>photos/r4/01.jpg</code>, '
+   +'or a Google Drive link set to <b>Anyone with the link · Viewer</b>. A Drive <i>folder</i> link shows as an album card instead.</p>'
    +'<div class="field"><label>Round</label><select id="gMd" class="sel">'+opts.join('')+'</select></div>'
-   +'<div class="field"><label>Links</label><textarea id="gUrls" rows="5" placeholder="https://…/photo1.jpg&#10;https://…/photo2.jpg"></textarea></div>'
+   +'<div class="field"><label>Links</label><textarea id="gUrls" rows="5" placeholder="photos/r4/01.jpg&#10;photos/r4/02.jpg&#10;https://drive.google.com/file/d/…/view"></textarea></div>'
    +'<div class="field"><label>Caption (optional)</label><input id="gCap" maxlength="80" placeholder="e.g. Falcons v Thunder"></div>'
    +'<div class="pr-cta"><button class="btn solid" id="gSave">Add to the gallery</button></div></div>', true);
   $('#gSave').addEventListener('click',async ()=>{
     const md=$('#gMd').value, cap=$('#gCap').value.trim();
-    const urls=$('#gUrls').value.split('\n').map(x=>x.trim()).filter(x=>/^https?:\/\//i.test(x));
+    const urls=$('#gUrls').value.split('\n').map(cleanLink).filter(Boolean);
     if(!urls.length){ toast('Paste at least one link','bad'); return; }
     const now=Date.now();
     state.media = mediaList().concat(urls.map((u,n)=>({
@@ -3855,20 +3864,21 @@ function openPaperAdd(){
   if(!admin){ toast('Organiser code needed','bad'); return; }
   const next=(paperList()[0] ? (+paperList()[0].no||0)+1 : 1);
   openVeil('<div class="modal-h"><h3>Add an issue</h3><button class="btn sm x">Close</button></div>'
-   +'<div class="modal-b"><p class="pr-hint">Paste the link to the PDF on Google Drive (shared as <b>Anyone with the link · Viewer</b>). '
-   +'The cover is taken from page&nbsp;1 automatically — leave the cover box empty unless you want a different picture.</p>'
+   +'<div class="modal-b"><p class="pr-hint">The issue can sit beside the site, e.g. <code>room214/issue1.pdf</code>, or be a Google Drive link '
+   +'set to <b>Anyone with the link · Viewer</b>. With a Drive link the cover is taken from page&nbsp;1 automatically; '
+   +'for a PDF kept beside the site, add a cover picture such as <code>room214/issue1.jpg</code>.</p>'
    +'<div class="field"><label>Issue number</label><input id="pNo" inputmode="numeric" value="'+next+'"></div>'
    +'<div class="field"><label>Date</label><input id="pDate" placeholder="e.g. 14 Oct 2026"></div>'
    +'<div class="field"><label>Headline</label><input id="pTitle" maxlength="70" placeholder="e.g. Eagles soar into the semi-finals"></div>'
-   +'<div class="field"><label>Link to the issue</label><input id="pUrl" placeholder="https://…"></div>'
-   +'<div class="field"><label>Cover image link (optional — page 1 is used by default)</label><input id="pCover" placeholder="leave empty to use page 1"></div>'
+   +'<div class="field"><label>Link to the issue</label><input id="pUrl" placeholder="room214/issue1.pdf"></div>'
+   +'<div class="field"><label>Cover image link (optional — page 1 is used by default)</label><input id="pCover" placeholder="room214/issue1.jpg — or leave empty for a Drive link"></div>'
    +'<div class="field"><label>One line about it (optional)</label><input id="pNote" maxlength="120"></div>'
    +'<div class="pr-cta"><button class="btn solid" id="pSave">Publish issue</button></div></div>', true);
   $('#pSave').addEventListener('click',async ()=>{
-    const no=$('#pNo').value.trim(), url=$('#pUrl').value.trim(), title=$('#pTitle').value.trim();
+    const no=$('#pNo').value.trim(), url=cleanLink($('#pUrl').value), title=$('#pTitle').value.trim();
     if(!title && !url){ toast('Add a headline or a link','bad'); return; }
     state.paper = paperList().concat([{id:'p'+Date.now(), no:no, date:$('#pDate').value.trim(),
-      title:title, url:url, cover:$('#pCover').value.trim(), note:$('#pNote').value.trim(), ts:Date.now()}]);
+      title:title, url:url, cover:cleanLink($('#pCover').value), note:$('#pNote').value.trim(), ts:Date.now()}]);
     await pushState(); renderAll(); closeVeil(); toast('Issue published');
   });
 }
