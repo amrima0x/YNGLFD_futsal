@@ -1862,10 +1862,9 @@ const FIXTURES = [
 ];
 
 const KO_TIES = [
-  { id:'sf1',   label:'Semi-final 1', date:'2026-11-04', time:'19:00', hSrc:['A',1],     aSrc:['B',2] },
-  { id:'sf2',   label:'Semi-final 2', date:'2026-11-04', time:'20:00', hSrc:['B',1],     aSrc:['A',2] },
-  { id:'third', label:'Third place',  date:'2026-11-09', time:'19:00', hSrc:['L','sf1'], aSrc:['L','sf2'] },
-  { id:'final', label:'Final',        date:'2026-11-09', time:'20:00', hSrc:['W','sf1'], aSrc:['W','sf2'] }
+  { id:'sf1',   label:'Semi-final 1', date:'2026-10-26', time:'19:00', hSrc:['A',1],     aSrc:['B',2] },
+  { id:'sf2',   label:'Semi-final 2', date:'2026-10-26', time:'20:00', hSrc:['B',1],     aSrc:['A',2] },
+  { id:'final', label:'Final',        date:'2026-11-01', time:'20:00', hSrc:['W','sf1'], aSrc:['W','sf2'] }
 ];
 
 /* ==================================================================
@@ -2581,7 +2580,7 @@ function tieHTML(t){
 function bracketHTML(){
   const fin=KO_TIES.filter(t=>t.id==='final')[0], champ=koTeam(['W','final']);
   return '<div class="bcol"><p class="btitle">Semi-finals</p>'+tieHTML(KO_TIES[0])+tieHTML(KO_TIES[1])+'</div>'
-    +'<div class="bcol"><p class="btitle">Final &amp; third place</p>'+tieHTML(fin)+tieHTML(KO_TIES[2])+'</div>'
+    +'<div class="bcol"><p class="btitle">Final</p>'+tieHTML(fin)+'</div>'
     +'<div class="bcol"><p class="btitle">Champion</p><div class="champ"><div class="cup">🏆</div>'
     +'<h4>'+(champ?esc(TEAMS[champ].name):'To be decided')+'</h4>'
     +'<p>'+(champ?'YNGLFD Futsal Cup 2026':'Winner of the final')+'</p></div></div>';
