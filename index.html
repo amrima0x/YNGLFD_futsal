@@ -219,6 +219,8 @@ body.admin #galAdd,body.admin #paperAdd{display:inline-block}
 .gal-h b{font-family:var(--display);font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase}
 .gal-h span{font-family:var(--cond);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
 .gal-h i{flex:1;height:1px;background:var(--line-soft,rgba(128,128,128,.25));font-style:normal}
+.gph.miss,.cov.miss{display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.05)}
+.gph.miss:before,.cov.miss:before{content:'NOT SHARED';font-family:var(--cond);font-size:.72rem;letter-spacing:.14em;color:var(--muted)}
 .gal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(168px,1fr));gap:12px}
 .gph{position:relative;aspect-ratio:4/3;overflow:hidden;border-radius:10px;border:1px solid var(--slate);
   background:var(--navy-2);cursor:pointer;display:block;padding:0}
@@ -236,7 +238,9 @@ body.admin .gph .del{display:block}
 .issues{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
 .issue{border:1px solid var(--slate);border-radius:12px;overflow:hidden;background:var(--navy);display:flex;flex-direction:column}
 .issue .cov{aspect-ratio:3/4;background:linear-gradient(160deg,var(--navy-2),var(--ink));position:relative;overflow:hidden}
-.issue .cov img{width:100%;height:100%;object-fit:cover;display:block}
+.issue .cov img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+@media(max-width:600px){.issues{grid-template-columns:repeat(2,1fr);gap:12px}
+ .issue .bd{padding:11px 11px 13px;gap:5px} .issue .bd h4{font-size:.92rem} .issue .bd p{font-size:.78rem}}
 .issue .cov .no{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px}
 .issue .cov .no b{font-family:var(--display);font-size:2.6rem;color:var(--lime);line-height:1}
 .issue .cov .no span{font-family:var(--cond);font-size:.68rem;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
@@ -3719,7 +3723,22 @@ function paperList(){
   return (Array.isArray(state.paper) ? state.paper.filter(i=>i && (i.url||i.title)) : [])
     .slice().sort((a,b)=>(+b.no||0)-(+a.no||0) || (+b.ts||0)-(+a.ts||0));
 }
-const isImg = u => /\.(jpe?g|png|gif|webp|avif|bmp)(\?|#|$)/i.test(u||'');
+/* ---- Google Drive links -------------------------------------------------
+   A normal Drive share link cannot be used as an <img> source. These helpers
+   pull the file id out of any Drive link and rebuild it as a direct image.
+   For a PDF the same endpoint returns a picture of page 1 — that is what the
+   newspaper uses as its cover. */
+const DRIVE_RE = /(?:drive|docs)\.google\.com\/(?:file\/d\/|[^#]*?[?&]id=)([A-Za-z0-9_-]{12,})/i;
+function driveId(u){ const m=DRIVE_RE.exec(u||''); return m?m[1]:''; }
+const isDriveFolder = u => /drive\.google\.com\/(?:drive\/)?(?:u\/\d+\/)?folders\//i.test(u||'');
+function imgSrc(u,w){ const id=driveId(u); return id ? ('https://drive.google.com/thumbnail?id='+id+'&sz=w'+(w||1200)) : (u||''); }
+/* if Drive throttles the first endpoint, fall back to the second one */
+function imgFb(u,w){
+  const id=driveId(u); if(!id) return '';
+  return " onerror=\"if(!this.dataset.f){this.dataset.f=1;this.src='https://lh3.googleusercontent.com/d/"+id+"=w"+(w||1200)+"';}"
+   +"else{this.style.display='none';this.parentNode&&this.parentNode.classList.add('miss');}\"";
+}
+const isImg = u => !isDriveFolder(u) && (/\.(jpe?g|png|gif|webp|avif|bmp)(\?|#|$)/i.test(u||'') || !!driveId(u));
 function mdLabel(key){
   if(key==='ko') return 'Knockout week';
   if(key==='general' || key===''||key==null) return 'Around the tournament';
@@ -3754,7 +3773,7 @@ function renderGallery(){
     return '<div class="gal-day"><div class="gal-h"><b>'+esc(mdLabel(k))+'</b><i></i><span>'+items.length+' photo'+(items.length>1?'s':'')+'</span></div>'
       +'<div class="gal-grid">'+items.map(m=>{
         const del='<button class="del" data-del="'+esc(m.id)+'" title="Remove">✕</button>';
-        if(isImg(m.url)) return '<div class="gph" data-open="'+esc(m.id)+'"><img loading="lazy" src="'+esc(m.url)+'" alt="'+esc(m.cap||'Match photo')+'">'
+        if(isImg(m.url)) return '<div class="gph" data-open="'+esc(m.id)+'"><img loading="lazy" src="'+esc(imgSrc(m.url,900))+'" alt="'+esc(m.cap||'Match photo')+'"'+imgFb(m.url,900)+'>'
           +(m.cap?'<span class="cap">'+esc(m.cap)+'</span>':'')+del+'</div>';
         return '<a class="gph link" href="'+esc(m.url)+'" target="_blank" rel="noopener">📁<span>'+esc(m.cap||'Open album')+'</span>'+del+'</a>';
       }).join('')+'</div></div>';
@@ -3776,7 +3795,7 @@ function openPhoto(id){
   const draw=()=>{
     const m=list[i]; if(!m) return;
     openVeil('<div class="modal-h"><h3>'+esc(mdLabel(m.md))+'</h3><button class="btn sm x">Close</button></div>'
-     +'<div class="modal-b"><div class="lightbox"><img src="'+esc(m.url)+'" alt="'+esc(m.cap||'Match photo')+'"></div>'
+     +'<div class="modal-b"><div class="lightbox"><img src="'+esc(imgSrc(m.url,1800))+'" alt="'+esc(m.cap||'Match photo')+'"'+imgFb(m.url,1800)+'></div>'
      +(m.cap?'<p class="pr-hint" style="margin-top:10px">'+esc(m.cap)+'</p>':'')
      +'<div class="lb-nav"><button class="btn" id="lbPrev">‹ Previous</button>'
      +'<span class="side-tag">'+(i+1)+' / '+list.length+'</span>'
@@ -3791,8 +3810,8 @@ function openGalleryAdd(){
   const opts=ROUNDS.map((r,i)=>'<option value="'+(i+1)+'">'+esc(mdLabel(i+1))+'</option>').reverse()
     .concat(['<option value="ko">Knockout week</option>','<option value="general">Around the tournament</option>']);
   openVeil('<div class="modal-h"><h3>Add photos</h3><button class="btn sm x">Close</button></div>'
-   +'<div class="modal-b"><p class="pr-hint">Paste the photo links, one per line. A direct image link shows as a photo; '
-   +'any other link (a Drive or SharePoint folder) shows as an album card.</p>'
+   +'<div class="modal-b"><p class="pr-hint">Paste the photo links, one per line. Google Drive links work as they are — '
+   +'just set the file to <b>Anyone with the link · Viewer</b> first. A link to a Drive <i>folder</i> shows as an album card instead.</p>'
    +'<div class="field"><label>Round</label><select id="gMd" class="sel">'+opts.join('')+'</select></div>'
    +'<div class="field"><label>Links</label><textarea id="gUrls" rows="5" placeholder="https://…/photo1.jpg&#10;https://…/photo2.jpg"></textarea></div>'
    +'<div class="field"><label>Caption (optional)</label><input id="gCap" maxlength="80" placeholder="e.g. Falcons v Thunder"></div>'
@@ -3816,7 +3835,8 @@ function renderPaper(){
     return;
   }
   host.innerHTML='<div class="issues">'+list.map(it=>{
-    const cover = it.cover ? '<img loading="lazy" src="'+esc(it.cover)+'" alt="Room 214 issue '+esc(it.no||'')+'">'
+    const cv = it.cover || (driveId(it.url)?it.url:'');
+    const cover = cv ? '<img loading="lazy" src="'+esc(imgSrc(cv,700))+'" alt="Room 214 issue '+esc(it.no||'')+'"'+imgFb(cv,700)+'>'
       : '<div class="no"><b>'+esc(it.no||'214')+'</b><span>Issue</span></div>';
     return '<div class="issue"><div class="cov">'+cover+'</div><div class="bd">'
       +'<span class="mt">Issue '+esc(it.no||'—')+(it.date?(' · '+esc(it.date)):'')+'</span>'
@@ -3835,12 +3855,13 @@ function openPaperAdd(){
   if(!admin){ toast('Organiser code needed','bad'); return; }
   const next=(paperList()[0] ? (+paperList()[0].no||0)+1 : 1);
   openVeil('<div class="modal-h"><h3>Add an issue</h3><button class="btn sm x">Close</button></div>'
-   +'<div class="modal-b"><p class="pr-hint">The link can be a PDF, a OneDrive file or any page — it opens in a new tab.</p>'
+   +'<div class="modal-b"><p class="pr-hint">Paste the link to the PDF on Google Drive (shared as <b>Anyone with the link · Viewer</b>). '
+   +'The cover is taken from page&nbsp;1 automatically — leave the cover box empty unless you want a different picture.</p>'
    +'<div class="field"><label>Issue number</label><input id="pNo" inputmode="numeric" value="'+next+'"></div>'
    +'<div class="field"><label>Date</label><input id="pDate" placeholder="e.g. 14 Oct 2026"></div>'
    +'<div class="field"><label>Headline</label><input id="pTitle" maxlength="70" placeholder="e.g. Eagles soar into the semi-finals"></div>'
    +'<div class="field"><label>Link to the issue</label><input id="pUrl" placeholder="https://…"></div>'
-   +'<div class="field"><label>Cover image link (optional)</label><input id="pCover" placeholder="https://…/cover.jpg"></div>'
+   +'<div class="field"><label>Cover image link (optional — page 1 is used by default)</label><input id="pCover" placeholder="leave empty to use page 1"></div>'
    +'<div class="field"><label>One line about it (optional)</label><input id="pNote" maxlength="120"></div>'
    +'<div class="pr-cta"><button class="btn solid" id="pSave">Publish issue</button></div></div>', true);
   $('#pSave').addEventListener('click',async ()=>{
