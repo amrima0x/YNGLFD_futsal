@@ -203,12 +203,24 @@ body.admin #mSquads{display:flex}
 .tipbtn.pulse::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--oji-green);
   animation:tipring 2.4s ease-out infinite}
 @keyframes tipring{0%{opacity:.65;transform:scale(.86)}70%{opacity:0;transform:scale(1.25)}100%{opacity:0}}
+/* unread badge — like a waiting message */
+.tipbtn .dot{display:none;position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;
+  border-radius:999px;background:#E03131;color:#fff;border:2px solid #fff;
+  font-family:var(--cond);font-size:.64rem;font-weight:700;font-style:normal;line-height:15px;text-align:center;
+  box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.tipbtn.pulse .dot{display:block;animation:tipbadge 2.4s ease-in-out infinite}
+.tipbtn.pulse{animation:tipnudge 2.4s ease-in-out infinite}
+@keyframes tipbadge{0%,72%,100%{transform:scale(1)}80%{transform:scale(1.22)}88%{transform:scale(1)}}
+@keyframes tipnudge{0%,70%,100%{transform:translateY(0) rotate(0)}
+  76%{transform:translateY(-3px) rotate(-7deg)}82%{transform:translateY(-3px) rotate(7deg)}
+  88%{transform:translateY(0) rotate(0)}}
 @media (max-width:820px){
   .tipnote{top:auto;bottom:calc(84px + var(--safe-b));right:12px;left:12px;width:auto}
   .tipnote{transform:translateY(16px) scale(.97)}
   .tipnote.on{transform:none}
 }
-@media (prefers-reduced-motion:reduce){ .tipnote{transition:none} .tipnote .life i{animation:none} .tipbtn.pulse::after{animation:none} }
+@media (prefers-reduced-motion:reduce){ .tipnote{transition:none} .tipnote .life i{animation:none}
+  .tipbtn.pulse::after,.tipbtn.pulse,.tipbtn.pulse .dot{animation:none} }
 /* ---------- photo gallery, Room 214, safety tip ---------- */
 .gal-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
 .gal-bar .sel{max-width:240px}
@@ -766,18 +778,19 @@ select.sel option{background:var(--ink);color:var(--bone)}
   @keyframes vin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
   /* --- bottom nav --- */
-  .mnav{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(62px,1fr);overflow-x:auto;scrollbar-width:none;
+  .mnav{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);overflow:hidden;scrollbar-width:none;
     position:fixed;left:0;right:0;bottom:0;z-index:80;
     background:rgba(8,32,46,.98);backdrop-filter:blur(16px);border-top:1px solid rgba(157,161,20,.3);
     padding-bottom:var(--safe-b);box-shadow:0 -8px 26px rgba(0,0,0,.4)}
-  .mnav button{background:transparent;border:0;color:var(--muted);min-height:56px;padding:9px 2px 8px;cursor:pointer;
+  .mnav button{background:transparent;border:0;color:var(--muted);min-height:56px;padding:9px 1px 8px;cursor:pointer;
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;position:relative;
     transition:color .2s}
-  .mnav button span{font-family:var(--cond);font-size:.58rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase}
-  .mnav button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round;transition:transform .22s}
+  .mnav button span{font-family:var(--cond);font-size:.55rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    white-space:nowrap;max-width:100%;overflow:hidden}
+  .mnav button svg{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round;transition:transform .22s}
   .mnav button.on{color:var(--lime)}
   .mnav button.on svg{transform:translateY(-1px) scale(1.08)}
-  .mnav button.on::before{content:"";position:absolute;top:0;left:26%;right:26%;height:2px;background:var(--lime);
+  .mnav button.on::before{content:"";position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--lime);
     animation:navin .26s ease both}
   @keyframes navin{from{transform:scaleX(.3);opacity:0}to{transform:none;opacity:1}}
 
@@ -1040,7 +1053,9 @@ select.sel option{background:var(--ink);color:var(--bone)}
   .mvs-t .crest{width:70px;height:70px}
   .mvs-t .nm{font-size:.88rem}
   .mvs-count .ring{width:128px;height:128px}
-  .mnav button span{font-size:.53rem;letter-spacing:.08em}
+  .mnav button span{font-size:.5rem;letter-spacing:.01em}
+  .mnav button svg{width:19px;height:19px}
+  .mnav button{padding:8px 0 7px;gap:3px}
   .mrow{grid-template-columns:22px 26px 1fr 0 30px 34px;gap:6px;padding:9px 11px}
   .mrow .mp,.ml-cols span:nth-child(4){display:none}
   .ml-cols{grid-template-columns:22px 26px 1fr 0 30px 34px;gap:6px;padding:7px 11px}
@@ -4067,13 +4082,19 @@ function showTip(){
   tipTimer=setTimeout(hideTip,14000);
   try{ localStorage.setItem('ynglfd-tip-day', new Date().toDateString()); }catch(e){}
 }
-/* once a day the button pulses and the tip opens by itself a few seconds in */
+/* A new tip waits each day like an unread message: the button carries a red
+   badge and nudges now and then. Opening it clears both until tomorrow. */
 function tipDaily(){
   let seen=''; try{ seen=localStorage.getItem('ynglfd-tip-day')||''; }catch(e){}
-  if(seen===new Date().toDateString()) return;
-  const btn=$('#tipBtn'); if(btn) btn.classList.add('pulse');
-  setTimeout(()=>{ if(!$('#veil').classList.contains('on')) showTip(); }, 6000);
+  const btn=$('#tipBtn'); if(!btn) return;
+  if(seen===new Date().toDateString()){ btn.classList.remove('pulse'); return; }
+  btn.classList.add('pulse');
 }
+/* if the board is left open past midnight, the next day's tip shows up */
+setInterval(()=>{
+  let seen=''; try{ seen=localStorage.getItem('ynglfd-tip-day')||''; }catch(e){}
+  if(seen!==new Date().toDateString()) tipDaily();
+}, 600000);
 
 $('#galAdd').addEventListener('click',openGalleryAdd);
 $('#galCover').addEventListener('click',()=>{
@@ -4093,10 +4114,11 @@ $('#paperAdd').addEventListener('click',openPaperAdd);
   b.setAttribute('aria-label','Show a safety tip'); b.title='Safety tip';
   b.innerHTML="<svg viewBox='0 0 64 64' aria-hidden='true'><path d='M32 4 L57 12 V32 C57 46 46 56 32 60 C18 56 7 46 7 32 V12 Z' fill='#fff' fill-opacity='.18'/>"
    +"<path d='M32 18 L46 43 H18 Z' fill='none' stroke='#fff' stroke-width='4' stroke-linejoin='round'/>"
-   +"<rect x='30' y='26' width='4' height='10' rx='2' fill='#fff'/><circle cx='32' cy='39.5' r='2.2' fill='#fff'/></svg>";
+   +"<rect x='30' y='26' width='4' height='10' rx='2' fill='#fff'/><circle cx='32' cy='39.5' r='2.2' fill='#fff'/></svg>"
+   +"<i class='dot'>1</i>";
   b.addEventListener('click',()=>{ (tipNote && tipNote.classList.contains('on')) ? hideTip() : showTip(); });
   document.body.appendChild(b);
-  setTimeout(tipDaily, 1800);
+  setTimeout(tipDaily, 1200);
 })();
 
 (async function boot(){
