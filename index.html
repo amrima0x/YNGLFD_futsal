@@ -211,9 +211,12 @@ body.admin #mSquads{display:flex}
 .tipbtn.pulse .dot{display:block;animation:tipbadge 2.4s ease-in-out infinite}
 .tipbtn.pulse{animation:tipnudge 2.4s ease-in-out infinite}
 @keyframes tipbadge{0%,72%,100%{transform:scale(1)}80%{transform:scale(1.22)}88%{transform:scale(1)}}
-@keyframes tipnudge{0%,70%,100%{transform:translateY(0) rotate(0)}
-  76%{transform:translateY(-3px) rotate(-7deg)}82%{transform:translateY(-3px) rotate(7deg)}
-  88%{transform:translateY(0) rotate(0)}}
+@keyframes tipnudge{0%,62%,100%{transform:translateY(0) rotate(0)}
+  68%{transform:translateY(-4px) rotate(-10deg)}
+  74%{transform:translateY(-4px) rotate(9deg)}
+  80%{transform:translateY(-2px) rotate(-6deg)}
+  86%{transform:translateY(0) rotate(4deg)}
+  92%{transform:translateY(0) rotate(0)}}
 @media (max-width:820px){
   .tipnote{top:auto;bottom:calc(84px + var(--safe-b));right:12px;left:12px;width:auto}
   .tipnote{transform:translateY(16px) scale(.97)}
@@ -4080,21 +4083,13 @@ function showTip(){
   const btn=$('#tipBtn'); if(btn) btn.classList.remove('pulse');
   clearTimeout(tipTimer);
   tipTimer=setTimeout(hideTip,14000);
-  try{ localStorage.setItem('ynglfd-tip-day', new Date().toDateString()); }catch(e){}
 }
-/* A new tip waits each day like an unread message: the button carries a red
-   badge and nudges now and then. Opening it clears both until tomorrow. */
+/* The green tip button waits like an unread message on every visit: it carries
+   a red badge and shakes now and then. Opening a tip stops it for this visit;
+   it starts again the next time the board is opened. */
 function tipDaily(){
-  let seen=''; try{ seen=localStorage.getItem('ynglfd-tip-day')||''; }catch(e){}
-  const btn=$('#tipBtn'); if(!btn) return;
-  if(seen===new Date().toDateString()){ btn.classList.remove('pulse'); return; }
-  btn.classList.add('pulse');
+  const btn=$('#tipBtn'); if(btn) btn.classList.add('pulse');
 }
-/* if the board is left open past midnight, the next day's tip shows up */
-setInterval(()=>{
-  let seen=''; try{ seen=localStorage.getItem('ynglfd-tip-day')||''; }catch(e){}
-  if(seen!==new Date().toDateString()) tipDaily();
-}, 600000);
 
 $('#galAdd').addEventListener('click',openGalleryAdd);
 $('#galCover').addEventListener('click',()=>{
