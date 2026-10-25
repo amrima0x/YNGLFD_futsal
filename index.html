@@ -1254,7 +1254,7 @@ window.OJI = {
   /* the three knockout ties shown in the ribbon */
   ties:[ {t:'Semi-final 1', d:'Mon 26 Oct · 7:00 PM'},
          {t:'Semi-final 2', d:'Mon 26 Oct · 8:00 PM'},
-         {t:'Final',        d:'Sun 1 Nov · 8:00 PM'} ],
+         {t:'Final',        d:'Wed 4 Nov · 8:00 PM'} ],
   /* Drop the two logo files next to index.html in the repository and they
      appear by themselves — no need to touch this file:
         logo_ynglfd.png      (or .svg / .jpg / .webp)
@@ -1438,8 +1438,8 @@ window.OJI = {
 body.sgopen{overflow:hidden}
 .sg-top{display:flex;align-items:center;gap:12px;padding:14px 16px 10px;flex:none}
 .sg-top .ti{flex:1;min-width:0}
-.sg-top b{display:block;font-family:var(--cond);font-size:1.05rem;letter-spacing:.06em;text-transform:uppercase;
-  white-space:nowrap;
+.sg-top b{display:block;font-family:var(--cond);font-size:1.05rem;letter-spacing:.04em;text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   background:var(--gold-grad,linear-gradient(90deg,#C9A147,#E7C165));-webkit-background-clip:text;
   background-clip:text;-webkit-text-fill-color:transparent}
 .sg-top span{display:block;font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:2px}
@@ -1725,6 +1725,46 @@ body.sgopen{overflow:hidden}
   .pg-cta .btn{width:100%}
   .pg-best{width:100%}
 }
+
+/* ---------- free-kick wall, curve bar, ball trail --------------------- */
+.sg-wall{position:absolute;z-index:3;display:none;justify-content:space-between;align-items:flex-end;
+  pointer-events:none;transition:transform .22s}
+.sg-wall.on{display:flex}
+.sg-wall.jump{transform:translateY(-16px)}
+.sg-wall .mn{flex:1;min-width:0;display:grid;place-items:end center}
+.sg-wall .mn svg{width:100%;max-width:52px;height:auto;
+  filter:drop-shadow(0 10px 16px rgba(0,0,0,.55))}
+.sg-curve{position:absolute;left:8%;right:8%;bottom:25%;height:34px;z-index:6;opacity:0;
+  transition:opacity .15s;pointer-events:none}
+.sg-curve.on{opacity:1}
+.sg-curve::before{content:"";position:absolute;left:0;right:0;top:14px;height:4px;border-radius:3px;
+  background:linear-gradient(90deg,rgba(231,193,101,.25),rgba(231,193,101,.6),rgba(231,193,101,.25))}
+.sg-curve i{position:absolute;top:6px;width:4px;height:20px;margin-left:-2px;border-radius:3px;
+  background:#F7E9BE;box-shadow:0 0 12px rgba(231,193,101,.95)}
+.sg-curve b{position:absolute;left:0;right:0;top:-6px;text-align:center;font-family:var(--cond);
+  font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--lime)}
+.sg-trail{position:absolute;inset:0;z-index:4;pointer-events:none}
+.sg-trail i{position:absolute;width:9px;height:9px;border-radius:50%;
+  background:rgba(247,233,190,.6);box-shadow:0 0 10px rgba(231,193,101,.55);
+  animation:pkfade .7s ease-out forwards}
+@keyframes pkfade{to{opacity:0;transform:translate(-50%,-50%) scale(.3)}}
+.sg-step .kd{font-style:normal;display:inline-block;margin:0 4px;padding:2px 9px;border-radius:999px;
+  font-size:.56rem;letter-spacing:.14em;font-weight:800;color:#0A0D18;
+  background:var(--gold-grad,linear-gradient(90deg,#C9A147,#E7C165))}
+.sg-step .kd.fk{background:linear-gradient(90deg,#6FA8FF,#BBD6FF)}
+.sg-pips i.sep{margin-right:14px;position:relative}
+.sg-pips i.sep::after{content:"";position:absolute;right:-9px;top:1px;width:1px;height:10px;
+  background:var(--hair)}
+@media (max-width:440px){
+  .sg-top b{font-size:.92rem;letter-spacing:.02em}
+  .sg-top span{font-size:.58rem}
+  .sg-pts{font-size:.62rem;padding:5px 9px}
+  .sg-x{width:32px;height:32px}
+}
+@media (max-width:420px){
+  .sg-curve{height:30px;bottom:24%}
+  .sg-wall .mn svg{max-width:44px}
+}
 </style>
 </head>
 <body>
@@ -1818,7 +1858,7 @@ body.sgopen{overflow:hidden}
       <div class="pg-ball"><svg class="bal" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#fff"/><circle cx="24" cy="24" r="21" fill="none" stroke="#0A0D18" stroke-width="2"/><path d="M24 11l6.5 4.8-2.5 7.7h-8l-2.5-7.7z" fill="#0A0D18"/><path d="M24 11V5M30.5 15.8l5.8-1.9M17.5 15.8l-5.8-1.9M28 23.5l4.6 6.3M20 23.5l-4.6 6.3" stroke="#0A0D18" stroke-width="2"/><path d="M15.4 29.8l-2 6.1M32.6 29.8l2 6.1M19 38h10" stroke="#0A0D18" stroke-width="2"/></svg></div>
       <div class="pg-tx">
         <b>Penalty Challenge</b>
-        <span>Five penalties, one keeper.</span>
+        <span>Ten rounds &mdash; penalties, then free kicks over the wall.</span>
         <div class="pg-cta">
           <button class="btn solid" id="playNow">Play now</button>
           <span class="pg-best" id="playBest"></span>
@@ -2229,7 +2269,7 @@ const FIXTURES = [
 const KO_TIES = [
   { id:'sf1',   label:'Semi-final 1', date:'2026-10-26', time:'19:00', hSrc:['A',1],     aSrc:['B',2] },
   { id:'sf2',   label:'Semi-final 2', date:'2026-10-26', time:'20:00', hSrc:['B',1],     aSrc:['A',2] },
-  { id:'final', label:'Final',        date:'2026-11-01', time:'20:00', hSrc:['W','sf1'], aSrc:['W','sf2'] }
+  { id:'final', label:'Final',        date:'2026-11-04', time:'20:00', hSrc:['W','sf1'], aSrc:['W','sf2'] }
 ];
 
 /* ==================================================================
@@ -4376,14 +4416,24 @@ async function prSave(){
    keeper cannot reach. Corners and streaks pay extra, and the best
    score of every player is kept on a shared board.
    ================================================================== */
-const PK_SHOTS=5;
+const PK_ROUNDS=10;
+const PK_TW=0.56;                /* where the wall stands along the flight */
 let pkOn=false, pkPhase='idle', pkShot=0, pkScore=0, pkStreak=0, pkBestRun=0,
-    pkLog=[], pkRaf=0, pkGx=.5, pkGy=.5, pkT0=0;
+    pkLog=[], pkRaf=0, pkGx=.5, pkGy=.5, pkC=0, pkT0=0, pkWallNow=null, pkTrail=[];
 
 function pkBest(){ try{ return +localStorage.getItem('pk_best')||0; }catch(e){ return 0; } }
 function pkSetBest(v){ try{ localStorage.setItem('pk_best',String(v)); }catch(e){} }
 function pkName(){ try{ return localStorage.getItem('pk_name')||localStorage.getItem('pr_lastname')||''; }catch(e){ return ''; } }
 
+/* rounds 1-4 are penalties, 5-10 are free kicks behind a wall */
+function pkKind(r){ return r<4 ? 'pen' : 'fk'; }
+function pkWall(r){
+  if(r<4) return null;
+  const late = r>=7;
+  const w = late ? 0.46 : 0.38;
+  const c = [0.36,0.60,0.46,0.40,0.58,0.50][Math.min(5,r-4)];
+  return {w0:Math.max(0.03,c-w/2), w1:Math.min(0.97,c+w/2), late:late};
+}
 function pkBallSVG(){
   return '<svg class="sg-ball" id="pkBall" viewBox="0 0 48 48" aria-hidden="true">'
     +'<circle cx="24" cy="24" r="21" fill="#fff"/>'
@@ -4400,11 +4450,18 @@ function pkGkSVG(){
     +'<circle cx="6" cy="62" r="7" fill="#F3F6FF"/><circle cx="54" cy="62" r="7" fill="#F3F6FF"/>'
     +'<path d="M18 74h24v24H18z" fill="#15203A"/></svg>';
 }
+function pkManSVG(){
+  return '<svg viewBox="0 0 34 92" aria-hidden="true"><circle cx="17" cy="12" r="8.5" fill="#1B2436"/>'
+    +'<path d="M17 21c7 0 11 4.6 11 11v34H6V32c0-6.4 4-11 11-11z" fill="#1B2436"/>'
+    +'<path d="M6 34L1 52l5 2 4-14zM28 34l5 18-5 2-4-14z" fill="#1B2436"/>'
+    +'<path d="M9 66h16v26H9z" fill="#111827"/></svg>';
+}
+
 function pkOpenGame(){
   const v=$('#sgv');
   v.innerHTML='<div class="sg-top"><div class="ti"><b>Penalty Challenge</b>'
-      +'<span>Five shots &middot; beat the keeper</span></div>'
-    +'<div class="sg-pts" id="pkBestTag">Best '+pkBest()+'</div>'
+      +'<span id="pkSub">Ten rounds</span></div>'
+    +'<div class="sg-pts" id="pkBestTag"></div>'
     +'<button class="sg-x" id="pkX" aria-label="Close">&#10005;</button></div>'
     +'<div class="sg-hud"><div class="sc" id="pkScore">0</div>'
       +'<div class="st" id="pkStreak"></div>'
@@ -4414,6 +4471,9 @@ function pkOpenGame(){
       +'<div class="sg-goal" id="pkGoal">'
         +'<div class="sg-cross" id="pkCross"><i class="vl"></i><i class="hl"></i></div>'
         +pkGkSVG()+'</div>'
+      +'<div class="sg-wall" id="pkWall"></div>'
+      +'<div class="sg-curve" id="pkCurve"><i></i><b></b></div>'
+      +'<div class="sg-trail" id="pkTrailBox"></div>'
       +pkBallSVG()
       +'<div class="sg-hint" id="pkHint"></div>'
       +'<div class="sg-pop" id="pkPop"></div>'
@@ -4424,45 +4484,83 @@ function pkOpenGame(){
   $('#pkX').addEventListener('click', pkClose);
   $('#pkPitch').addEventListener('pointerdown', pkTap);
   pkOn=true; pkShot=0; pkScore=0; pkStreak=0; pkBestRun=0; pkLog=[];
-  pkHud(); requestAnimationFrame(()=>{ pkPark(); pkNext(); });
+  pkTag(); pkHud();
+  requestAnimationFrame(()=>{ pkPark(); pkNext(); });
 }
 function pkClose(){
   pkOn=false; cancelAnimationFrame(pkRaf);
   const v=$('#sgv'); v.classList.remove('on'); v.setAttribute('aria-hidden','true'); v.innerHTML='';
   document.body.classList.remove('sgopen');
 }
+function pkTag(){
+  const el=$('#pkBestTag'); if(!el) return;
+  const me=pkMine();
+  el.textContent = me ? (me.t+' pts') : (pkBest()+' pts');
+}
 function pkPark(){
   const b=$('#pkBall'); if(!b) return;
   const r=$('#pkPitch').getBoundingClientRect(), w=b.getBoundingClientRect().width||46;
   b.style.transform='translate('+(r.width/2-w/2)+'px,'+(r.height*0.855-w/2)+'px) scale(1) rotate(0deg)';
   b.classList.add('idle');
+  pkClearTrail();
 }
+function pkClearTrail(){ const t=$('#pkTrailBox'); if(t) t.innerHTML=''; pkTrail=[]; }
 function pkHud(){
   $('#pkScore').textContent=pkScore;
   const s=$('#pkStreak'); s.textContent = pkStreak>1 ? ('×'+pkStreak+' streak') : '';
   s.classList.toggle('on', pkStreak>1);
   let pips='';
-  for(let i=0;i<PK_SHOTS;i++) pips+='<i class="'+(pkLog[i]||'')+'"></i>';
+  for(let i=0;i<PK_ROUNDS;i++) pips+='<i class="'+(pkLog[i]||'')+(i===3?' sep':'')+'"></i>';
   $('#pkPips').innerHTML=pips;
 }
+
+/* the wall, drawn in front of the goal */
+function pkDrawWall(w){
+  const host=$('#pkWall'); if(!host) return;
+  if(!w){ host.className='sg-wall'; host.innerHTML=''; return; }
+  const pit=$('#pkPitch').getBoundingClientRect(), g=$('#pkGoal').getBoundingClientRect();
+  const gx0=g.left-pit.left, gw=g.width, mid=gx0+gw*0.5;
+  const persp=1.26;                                   /* nearer the camera, so wider */
+  const L=mid+(gx0+w.w0*gw-mid)*persp, R=mid+(gx0+w.w1*gw-mid)*persp;
+  const n=w.late?5:4;
+  host.className='sg-wall on';
+  host.style.left=L+'px'; host.style.width=Math.max(40,R-L)+'px';
+  host.style.top=(pit.height*0.455)+'px';
+  let html='';
+  for(let i=0;i<n;i++) html+='<div class="mn">'+pkManSVG()+'</div>';
+  host.innerHTML=html;
+}
+function pkJumpWall(){ const w=$('#pkWall'); if(w) { w.classList.add('jump'); setTimeout(()=>w.classList.remove('jump'),520); } }
+
 function pkNext(){
   if(!pkOn) return;
-  if(pkShot>=PK_SHOTS){ pkEnd(); return; }
-  $('#pkStep').textContent='Penalty '+(pkShot+1)+' of '+PK_SHOTS+' — lock the side';
+  if(pkShot>=PK_ROUNDS){ pkEnd(); return; }
+  const kind=pkKind(pkShot);
+  pkWallNow=pkWall(pkShot);
+  pkDrawWall(pkWallNow);
+  $('#pkStep').innerHTML='Round '+(pkShot+1)+' of '+PK_ROUNDS
+    +' <em class="kd '+kind+'">'+(kind==='pen'?'Penalty':'Free kick')+'</em> &mdash; lock the side';
   $('#pkHint').textContent='Tap anywhere to stop the marker';
   $('#pkCross').classList.add('on'); $('#pkCross').classList.remove('xset');
-  pkPhase='x'; pkT0=performance.now();
+  $('#pkCurve').classList.remove('on');
+  pkC=0; pkPhase='x'; pkT0=performance.now();
   cancelAnimationFrame(pkRaf); pkRaf=requestAnimationFrame(pkLoop);
 }
 const pkTri = k => 1-Math.abs(1-(k%2));
 function pkLoop(t){
-  if(!pkOn||(pkPhase!=='x'&&pkPhase!=='y')) return;
+  if(!pkOn||(pkPhase!=='x'&&pkPhase!=='y'&&pkPhase!=='c')) return;
   const cross=$('#pkCross'); if(!cross) return;
-  const sp=0.80+0.17*pkShot, k=(t-pkT0)/1000*sp;
-  if(pkPhase==='x'){ pkGx = pkTri(k)*1.30-0.15; }
-  else            { pkGy = 1-pkTri(k*1.22)*1.18; }
-  cross.querySelector('.vl').style.left=(pkGx*100)+'%';
-  cross.querySelector('.hl').style.top =(pkGy*100)+'%';
+  const sp=0.78+0.13*pkShot, k=(t-pkT0)/1000*sp;
+  if(pkPhase==='x'){ pkGx = pkTri(k)*1.30-0.15; cross.querySelector('.vl').style.left=(pkGx*100)+'%'; }
+  else if(pkPhase==='y'){ pkGy = 1-pkTri(k*1.22)*1.18; cross.querySelector('.hl').style.top=(pkGy*100)+'%'; }
+  else {
+    pkC = (pkTri(k*1.05)-0.5)*1.12;                       /* -0.56 .. 0.56 */
+    const cv=$('#pkCurve'); if(cv){
+      cv.querySelector('i').style.left=((pkC/1.12+0.5)*100)+'%';
+      cv.querySelector('b').textContent=(pkC>0.04?'BEND RIGHT ':pkC<-0.04?'BEND LEFT ':'STRAIGHT ')
+        +Math.round(Math.abs(pkC)*100);
+    }
+  }
   pkRaf=requestAnimationFrame(pkLoop);
 }
 function pkTap(){
@@ -4470,105 +4568,147 @@ function pkTap(){
   if(pkPhase==='x'){
     pkPhase='y'; pkT0=performance.now();
     $('#pkCross').classList.add('xset');
-    $('#pkStep').textContent='Penalty '+(pkShot+1)+' of '+PK_SHOTS+' — lock the height';
+    $('#pkStep').innerHTML=$('#pkStep').innerHTML.replace(/&mdash;.*$/,'').replace(/—.*$/,'')+'&mdash; lock the height';
     $('#pkHint').textContent='Top corners are the hardest to reach';
     return;
   }
-  if(pkPhase==='y') pkStrike();
+  if(pkPhase==='y'){
+    if(pkKind(pkShot)==='fk'){
+      pkPhase='c'; pkT0=performance.now();
+      $('#pkCurve').classList.add('on');
+      $('#pkStep').innerHTML=$('#pkStep').innerHTML.replace(/&mdash;.*$/,'').replace(/—.*$/,'')+'&mdash; set the curve';
+      $('#pkHint').textContent='Bend it around the wall — or clip it over the top';
+      return;
+    }
+    pkStrike(); return;
+  }
+  if(pkPhase==='c') pkStrike();
 }
 
 /* ---- the shot ----------------------------------------------------- */
 function pkStrike(){
   pkPhase='fly'; cancelAnimationFrame(pkRaf);
   $('#pkCross').classList.remove('on');
+  $('#pkCurve').classList.remove('on');
   $('#pkHint').textContent='';
   const ball=$('#pkBall'); ball.classList.remove('idle');
+  pkClearTrail();
 
   const pit=$('#pkPitch').getBoundingClientRect(), g=$('#pkGoal').getBoundingClientRect();
   const gx0=g.left-pit.left, gy0=g.top-pit.top;
   const tx=gx0+pkGx*g.width, ty=gy0+pkGy*g.height;
   const bx=pit.width/2, by=pit.height*0.855, w=ball.getBoundingClientRect().width||46;
+  const bend=pkC*g.width;
 
-  /* the keeper reads the shot a little better every time */
-  const read=0.10+0.085*pkShot;
+  /* the keeper reads the shot better as the rounds go on */
+  const read=0.09+0.055*pkShot;
   let kx = Math.random()<read ? pkGx+(Math.random()*0.18-0.09) : 0.12+Math.random()*0.76;
   kx = Math.max(0.05, Math.min(0.95, kx));
   setTimeout(()=>{
     const gk=$('#pkGk'); if(!gk) return;
     const dx=(kx-0.5)*g.width;
     gk.style.transform='translateX(-50%) translate('+dx+'px,'+(pkGy<0.45?-10:10)+'px) rotate('+(dx<0?-26:26)+'deg)';
-  },90);
+  },110);
+  if(pkWallNow) setTimeout(pkJumpWall,90);
 
-  const t0=performance.now(), D=500;
+  const D=pkWallNow?600:500, t0=performance.now(); let lastDot=0;
   (function fly(t){
     const k=Math.min(1,((t||performance.now())-t0)/D);
-    const x=bx+(tx-bx)*k, y=by+(ty-by)*k-Math.sin(Math.PI*k)*30;
+    const x=bx+(tx-bx)*k+bend*Math.sin(Math.PI*k);
+    const y=by+(ty-by)*k-Math.sin(Math.PI*k)*30;
     ball.style.transform='translate('+(x-w/2)+'px,'+(y-w/2)+'px) scale('+(1-0.5*k)+') rotate('+(k*560)+'deg)';
+    if(k-lastDot>0.085){ lastDot=k; pkDot(x,y,1-0.5*k); }
     if(k<1) requestAnimationFrame(fly); else pkJudge(kx);
   })(t0);
 }
+function pkDot(x,y,s){
+  const box=$('#pkTrailBox'); if(!box) return;
+  const d=document.createElement('i');
+  d.style.left=x+'px'; d.style.top=y+'px'; d.style.transform='translate(-50%,-50%) scale('+s+')';
+  box.appendChild(d); setTimeout(()=>d.remove(),700);
+}
 function pkJudge(kx){
+  const kind=pkKind(pkShot);
   const off = pkGx<0.035 || pkGx>0.965 || pkGy<0.035;
-  const dx  = Math.abs(pkGx-kx);
+  let blocked=false, around=false;
+  if(pkWallNow && !off){
+    const xw = 0.5+(pkGx-0.5)*PK_TW + pkC*Math.sin(Math.PI*PK_TW);
+    const over = pkGy<0.26;
+    const clear = xw < pkWallNow.w0-0.015 || xw > pkWallNow.w1+0.015;
+    blocked = !over && !clear;
+    around  = clear && !over;
+  }
+  const dx=Math.abs(pkGx-kx);
   const reach = pkGy<0.30 ? 0.075 : (pkGy>0.80 ? 0.170 : 0.145);
-  const saved = !off && dx<reach;
-  let gain=0, word='', kind='m';
+  const saved = !off && !blocked && dx<reach;
+  let gain=0, word='', kind2='m';
 
   if(off){ word='Off the frame'; pkStreak=0; }
-  else if(saved){ word='Keeper gets it'; pkStreak=0; kind='s'; }
+  else if(blocked){ word='Into the wall!'; pkStreak=0; }
+  else if(saved){ word='Keeper gets it'; pkStreak=0; kind2='s'; }
   else{
-    kind='g'; gain=100;
+    kind2='g'; gain = kind==='fk' ? 150 : 100;
     const corner=(pkGx<0.20||pkGx>0.80), high=(pkGy<0.30);
     if(corner) gain+=50;
     if(high)   gain+=50;
+    if(around) gain+=40;
     pkStreak++; if(pkStreak>pkBestRun) pkBestRun=pkStreak;
     if(pkStreak>1) gain+=25*(pkStreak-1);
-    word = (corner&&high) ? 'Top corner!' : corner ? 'Picked the corner' : high ? 'Over the glove' : 'Goal';
+    word = around ? 'Bent it round the wall!'
+         : (corner&&high) ? 'Top corner!' : corner ? 'Picked the corner'
+         : high ? 'Over the glove' : (kind==='fk'?'Free kick in!':'Goal');
     pkScore+=gain;
   }
-  pkLog[pkShot]=kind; pkShot++;
+  pkLog[pkShot]=kind2; pkShot++;
   pkHud();
 
   const pop=$('#pkPop');
-  pop.className='sg-pop on '+kind;
+  pop.className='sg-pop on '+kind2;
   pop.innerHTML='<b>'+esc(word)+'</b>'+(gain?'<span>+'+gain+'</span>':'');
-  if(kind==='g') pkShake();
+  if(kind2==='g') pkShake();
   setTimeout(()=>{ pop.className='sg-pop'; },1000);
 
   setTimeout(()=>{
     if(!pkOn) return;
     const gk=$('#pkGk'); if(gk) gk.style.transform='translateX(-50%)';
     pkPark(); pkNext();
-  },1150);
+  },1200);
 }
 function pkShake(){
   const g=$('#pkGoal'); if(!g) return;
   g.classList.add('shook'); setTimeout(()=>g.classList.remove('shook'),420);
 }
 
-/* ---- the end of the run, and the shared board --------------------- */
+/* ---- end of the run, career total, shared board ------------------- */
+function pkMine(){
+  let id=''; try{ id=prSlug(localStorage.getItem('pk_name')||''); }catch(e){}
+  if(!id) return null;
+  const r=(state.arcade||{})[id];
+  return r ? {n:r.n, s:r.s||0, t:(r.t!=null?r.t:(r.s||0)), r:r.r||1} : null;
+}
 function pkEnd(){
   pkPhase='end';
+  $('#pkWall').className='sg-wall';
   const best=pkBest(), isBest=pkScore>best;
   if(isBest) pkSetBest(pkScore);
-  const tag=$('#pkBestTag'); if(tag) tag.textContent='Best '+Math.max(best,pkScore);
-  $('#pkStep').textContent='Run complete';
   const goals=pkLog.filter(x=>x==='g').length;
+  const me=pkMine();
   const res=$('#pkRes');
-  res.className='sg-res on '+(goals>=4?'goal':'save');
+  res.className='sg-res on '+(goals>=7?'goal':'save');
   res.innerHTML='<div class="big">'+pkScore+'</div>'
-    +'<div class="sc">'+goals+' of '+PK_SHOTS+' scored'
+    +'<div class="sc">'+goals+' of '+PK_ROUNDS+' scored'
       +(pkBestRun>1?(' &middot; best streak '+pkBestRun):'')+'</div>'
     +(isBest?'<div class="nt" style="color:var(--lime)">New personal best</div>':'')
+    +(me?'<div class="nt">Career total '+me.t+' &rarr; <b style="color:var(--lime)">'+(me.t+pkScore)+'</b></div>':'')
     +'<div class="pk-save" id="pkSave"></div>'
     +'<div class="sg-board" id="pkBoard"></div>'
     +'<div class="row"><button class="btn solid" id="pkAgain">Play again</button>'
     +'<button class="btn" id="pkDone">Close</button></div>';
-  if(goals>=4) sgConfetti('#pkPitch');
+  if(goals>=7) sgConfetti('#pkPitch');
   $('#pkAgain').addEventListener('click',()=>{
     res.className='sg-res'; res.innerHTML='';
     pkShot=0; pkScore=0; pkStreak=0; pkBestRun=0; pkLog=[];
-    pkHud(); pkPark(); pkNext();
+    pkTag(); pkHud(); pkPark(); pkNext();
   });
   $('#pkDone').addEventListener('click',()=>{ pkClose(); showView('cup'); });
   pkSaveBox(); pkRenderBoard();
@@ -4577,7 +4717,7 @@ function pkSaveBox(){
   const host=$('#pkSave'); if(!host) return;
   const nm=pkName();
   host.innerHTML='<input id="pkNameIn" maxlength="24" placeholder="Your name" value="'+esc(nm)+'">'
-    +'<button class="btn solid sm" id="pkPost">Put me on the board</button>';
+    +'<button class="btn solid sm" id="pkPost">Add to my total</button>';
   $('#pkPost').addEventListener('click', pkPost);
 }
 async function pkPost(){
@@ -4589,31 +4729,37 @@ async function pkPost(){
     await pullState();
     state.arcade = state.arcade || {};
     const id=prSlug(nm), cur=state.arcade[id];
-    if(!cur || pkScore>cur.s) state.arcade[id]={n:nm, s:pkScore, ts:Date.now()};
+    const prevT = cur ? (cur.t!=null?cur.t:(cur.s||0)) : 0;
+    const prevB = cur ? (cur.s||0) : 0;
+    const runs  = cur ? (cur.r||1)+1 : 1;
+    state.arcade[id]={n:nm, s:Math.max(prevB,pkScore), t:prevT+pkScore, r:runs, ts:Date.now()};
     await pushState();
-    renderAll(); pkRenderBoard();
-    btn.textContent='On the board';
+    renderAll(); pkRenderBoard(); pkTag();
+    btn.textContent='Added — total '+(prevT+pkScore);
   }catch(e){ btn.disabled=false; btn.textContent='Try again'; }
 }
+function pkTotal(r){ return r ? (r.t!=null?r.t:(r.s||0)) : 0; }
 function pkBoard(){
   const a=state.arcade||{};
   return Object.keys(a).map(k=>a[k]).filter(r=>r&&r.n)
-    .sort((x,y)=>(y.s||0)-(x.s||0)||(x.ts||0)-(y.ts||0));
+    .sort((x,y)=>pkTotal(y)-pkTotal(x)||(y.s||0)-(x.s||0)||(x.ts||0)-(y.ts||0));
 }
 function pkRenderBoard(){
   const host=$('#pkBoard'); if(!host) return;
   const rows=pkBoard().slice(0,5);
   host.innerHTML = rows.length
-    ? '<h5>Top scorers</h5>'+rows.map((r,i)=>'<div class="br'+(i===0?' top':'')+'">'
-        +'<span>'+String(i+1).padStart(2,'0')+'</span><b>'+esc(r.n)+'</b><i>'+(r.s||0)+'</i></div>').join('')
-    : '<h5>Top scorers</h5><div class="br empty">Nobody on the board yet — be the first</div>';
+    ? '<h5>Career leaders</h5>'+rows.map((r,i)=>'<div class="br'+(i===0?' top':'')+'">'
+        +'<span>'+String(i+1).padStart(2,'0')+'</span><b>'+esc(r.n)+'</b>'
+        +'<i>'+pkTotal(r)+'</i></div>').join('')
+    : '<h5>Career leaders</h5><div class="br empty">Nobody on the board yet — be the first</div>';
 }
-/* the Penalty Challenge page */
+/* the Penalty Challenge block on the Cup page */
 function renderPlayPage(){
   const best=$('#playBest');
   if(best){
-    const b=pkBest();
-    best.textContent = b ? ('Your best · '+b+' pts') : 'No run yet';
+    const me=pkMine();
+    best.textContent = me ? ('Your total · '+me.t+' pts  ·  best run '+me.s)
+                          : (pkBest()? ('Your best · '+pkBest()+' pts') : 'No run yet');
   }
   const host=$('#playBoard'); if(!host) return;
   const rows=pkBoard().slice(0,5);
@@ -4621,7 +4767,7 @@ function renderPlayPage(){
   host.innerHTML = rows.length
     ? rows.map((r,i)=>'<div class="br'+(i===0?' top':'')+(me&&r.n===me?' me':'')+'">'
         +'<span>'+String(i+1).padStart(2,'0')+'</span><b>'+esc(r.n)+'</b>'
-        +'<i>'+(r.s||0)+'</i></div>').join('')
+        +'<i>'+pkTotal(r)+'</i></div>').join('')
     : '<div class="empty-note">Nobody on the board yet — be the first</div>';
 }
 function renderArcadeStrip(){ renderPlayPage(); }
