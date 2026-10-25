@@ -1388,6 +1388,14 @@ window.OJI = {
 }
 
 /* ---------- Cup page: the four contenders --------------------------- */
+.kx-cont .cd.go{cursor:pointer;transition:border-color .18s,transform .18s,background .18s}
+.kx-cont .cd.go:hover{border-color:rgba(231,193,101,.55);transform:translateY(-2px)}
+.kx-cont .cd.go:active{transform:translateY(0)}
+.kx-cont .cd .tap{display:block;margin-top:9px;font-size:.55rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--lime);opacity:.75}
+.kx-edit{grid-column:1/-1;justify-self:center;margin-top:4px}
+.kx-pair{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+.kx-pair span{font-family:var(--cond);color:var(--muted);letter-spacing:.14em}
 .kx-cont{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 26px}
 .kx-cont .cd{position:relative;border:1px solid var(--hair);border-radius:16px;padding:18px 12px 15px;
   text-align:center;background:linear-gradient(180deg,rgba(231,193,101,.07),rgba(255,255,255,.012));overflow:hidden}
@@ -1525,25 +1533,39 @@ body.sgopen{overflow:hidden}
 .kx-hero::before{content:"";position:absolute;inset:0 0 auto;height:3px;
   background:var(--gold-grad,linear-gradient(90deg,#C9A147,#E7C165))}
 .kx-hero .in{position:relative;padding:22px 22px 20px}
-.kx-hero .lab{display:flex;align-items:center;gap:10px;justify-content:center;
-  font-family:var(--cond);font-size:.66rem;letter-spacing:.3em;text-transform:uppercase;color:var(--lime)}
+.kx-hero .lab{display:flex;align-items:center;gap:12px;justify-content:center;
+  font-family:var(--cond);font-size:.64rem;letter-spacing:.26em;text-transform:uppercase;color:var(--lime)}
 .kx-hero .lab i{display:block;width:6px;height:6px;border-radius:50%;background:var(--lime);
-  animation:kxblink 1.6s ease-in-out infinite}
+  animation:kxblink 1.6s ease-in-out infinite;flex:none}
+.kx-hero .lab .r{flex:1;max-width:70px;height:1px;background:linear-gradient(90deg,transparent,var(--lime))}
+.kx-hero .lab .r:last-child{background:linear-gradient(90deg,var(--lime),transparent)}
 @keyframes kxblink{0%,100%{opacity:1}50%{opacity:.15}}
-.kx-hero .mu{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;margin-top:16px}
-.kx-hero .sd{display:flex;align-items:center;gap:12px;min-width:0}
-.kx-hero .sd.r{flex-direction:row-reverse}
-.kx-hero .sd img,.kx-hero .sd svg{width:58px;height:58px;flex:none;object-fit:contain}
-.kx-hero .sd b{font-family:var(--cond);font-size:1.22rem;letter-spacing:.02em;text-transform:uppercase;
-  line-height:1.1}
-.kx-hero .sd.r b{text-align:right}
-.kx-hero .vs{font-family:var(--cond);font-size:.84rem;letter-spacing:.18em;color:var(--muted)}
-.kx-hero .when{text-align:center;margin-top:14px;font-size:.78rem;letter-spacing:.14em;
+.kx-hero .mu{display:grid;grid-template-columns:1fr 64px 1fr;align-items:center;gap:10px;margin-top:20px}
+.kx-hero .sd{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:0;
+  border:1px solid var(--hair);border-radius:16px;padding:16px 10px 14px;
+  background:linear-gradient(180deg,rgba(231,193,101,.07),rgba(255,255,255,.012));
+  transition:border-color .18s,transform .18s}
+.kx-hero .sd.go{cursor:pointer}
+.kx-hero .sd.go:hover{border-color:rgba(231,193,101,.55);transform:translateY(-2px)}
+.kx-hero .sd img,.kx-hero .sd svg{width:72px;height:72px;flex:none;object-fit:contain}
+.kx-hero .sd .nm{min-width:0;text-align:center}
+.kx-hero .sd b{display:block;font-family:var(--cond);font-size:1.18rem;letter-spacing:.03em;
+  text-transform:uppercase;line-height:1.05}
+.kx-hero .sd u{display:block;text-decoration:none;font-size:.56rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin-top:5px}
+.kx-hero .kx-vs{justify-self:center;align-self:center;display:grid;place-items:center;
+  width:52px;height:52px;padding:0;gap:0;grid-template-columns:none;border-radius:50%;
+  border:1px solid rgba(231,193,101,.45);background:rgba(6,9,18,.72);
+  font-family:var(--cond);font-size:.92rem;font-weight:800;letter-spacing:.08em;color:var(--lime)}
+.kx-hero .when{text-align:center;margin-top:18px;font-size:.72rem;letter-spacing:.2em;
   text-transform:uppercase;color:var(--muted)}
-.kx-clock{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px;max-width:430px;
+.kx-clock{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;max-width:460px;
   margin-left:auto;margin-right:auto}
-.kx-clock .c{border:1px solid var(--hair);border-radius:13px;padding:11px 4px 8px;text-align:center;
-  background:rgba(6,9,18,.55)}
+.kx-clock .c{position:relative;border:1px solid var(--hair);border-radius:14px;padding:12px 4px 9px;
+  text-align:center;overflow:hidden;
+  background:linear-gradient(180deg,rgba(231,193,101,.06),rgba(6,9,18,.6))}
+.kx-clock .c::before{content:"";position:absolute;inset:0 0 auto;height:2px;
+  background:var(--gold-grad,linear-gradient(90deg,#C9A147,#E7C165));opacity:.55}
 .kx-clock .c span{display:block;font-family:var(--cond);font-size:1.9rem;line-height:1;font-variant-numeric:tabular-nums;
   background:var(--gold-grad,linear-gradient(90deg,#C9A147,#E7C165));-webkit-background-clip:text;
   background-clip:text;-webkit-text-fill-color:transparent}
@@ -1554,12 +1576,18 @@ body.sgopen{overflow:hidden}
   text-transform:uppercase;margin-top:14px}
 @media (max-width:600px){
   .kx-hero .in{padding:18px 14px 16px}
-  .kx-hero .mu{gap:8px}
-  .kx-hero .sd{flex-direction:column;gap:7px;text-align:center}
-  .kx-hero .sd.r{flex-direction:column}
-  .kx-hero .sd b{font-size:.92rem}.kx-hero .sd.r b{text-align:center}
-  .kx-hero .sd img,.kx-hero .sd svg{width:48px;height:48px}
+  .kx-hero .mu{grid-template-columns:1fr 46px 1fr;gap:7px;margin-top:16px}
+  .kx-hero .sd{padding:13px 6px 12px;gap:8px}
+  .kx-hero .sd img,.kx-hero .sd svg{width:56px;height:56px}
+  .kx-hero .sd b{font-size:.95rem}
+  .kx-hero .sd u{font-size:.5rem;letter-spacing:.1em}
+  .kx-hero .kx-vs{width:44px;height:44px;font-size:.78rem}
+  .kx-hero .lab{font-size:.56rem;letter-spacing:.18em;gap:8px}
+  .kx-hero .lab .r{max-width:26px}
+  .kx-hero .when{font-size:.64rem;letter-spacing:.14em;margin-top:14px}
+  .kx-clock{gap:7px}
   .kx-clock .c span{font-size:1.5rem}
+  .kx-clock .c i{font-size:.48rem;letter-spacing:.16em}
 }
 /* ---------- knockout rows inside the match list --------------------- */
 .md.ko{border-color:rgba(231,193,101,.3)}
@@ -2484,13 +2512,29 @@ function standings(group){
 }
 const groupDone = g => FIXTURES.every((f,i)=> f.g!==g || played(i));
 
+/* The bracket seeds itself from the tables (A1 v B2, B1 v A2). The organiser
+   can override either side of a tie when the real draw differs; the override
+   lives in state.koSeed and everything else reads through tieSide(). */
+function koSeed(){ return state.koSeed || {}; }
+function tieSide(t,side){
+  if(!t) return null;
+  const ov=koSeed()[t.id];
+  if(ov && ov[side]){ return TEAMS[ov[side]] ? ov[side] : null; }
+  return koTeam(side==='h' ? t.hSrc : t.aSrc);
+}
+function tieOf(id){ return KO_TIES.filter(k=>k.id===id)[0]||null; }
+function sideLabel(t,side){
+  const ov=koSeed()[t.id];
+  if(ov && ov[side]) return 'Organiser pick';
+  return srcLabel(side==='h' ? t.hSrc : t.aSrc);
+}
 function koTeam(src){
   const kind=src[0], val=src[1];
   if(kind==='A'||kind==='B'){ if(!groupDone(kind)) return null; const s=standings(kind); return s[val-1]?s[val-1].key:null; }
   const t=state.ko[val];
   if(!t || t.hs==null || t.as==null) return null;
   const tie=KO_TIES.filter(k=>k.id===val)[0];
-  const hk=koTeam(tie.hSrc), ak=koTeam(tie.aSrc);
+  const hk=tieSide(tie,'h'), ak=tieSide(tie,'a');
   if(!hk||!ak) return null;
   let homeWon;
   if(t.hs!==t.as) homeWon = t.hs>t.as;
@@ -2547,7 +2591,7 @@ function renderHero(){
   if(!n){
     const kt=nextKO();
     if(kt){
-      const hk=koTeam(kt.hSrc), ak=koTeam(kt.aSrc);
+      const hk=tieSide(kt,'h'), ak=tieSide(kt,'a');
       const sideKO=(k,src,tag)=> '<div class="side"'+(k?(' data-team="'+k+'"'):'')+'>'+crest(k,0)
         +'<div><div class="side-name">'+(k?esc(TEAMS[k].name):srcLabel(src))+'</div>'
         +'<div class="side-tag">'+tag+'</div></div></div>';
@@ -2791,7 +2835,7 @@ function scorerLine(i){
 const isWO = i => { const r=res(i); return !!(r && r.wo); };
 /* a knockout tie, drawn with the same row as a league match */
 function koRow(t){
-  const hk=koTeam(t.hSrc), ak=koTeam(t.aSrc), sc=state.ko[t.id]||{};
+  const hk=tieSide(t,'h'), ak=tieSide(t,'a'), sc=state.ko[t.id]||{};
   const done = sc.hs!=null && sc.as!=null, ms=dt(t).getTime();
   const side=(k,src,r)=>'<div class="t'+(r?' right':'')+'"'+(k?(' data-team="'+k+'"'):' ')+'>'
       +(r?'':crest(k,30))
@@ -2938,7 +2982,7 @@ function renderBoot(){
 }
 
 function tieHTML(t){
-  const hk=koTeam(t.hSrc), ak=koTeam(t.aSrc), sc=state.ko[t.id]||{};
+  const hk=tieSide(t,'h'), ak=tieSide(t,'a'), sc=state.ko[t.id]||{};
   const done = sc.hs!=null && sc.as!=null;
   const row=(k,src,mine,other)=>{
     const win = done && mine>other;
@@ -2996,13 +3040,17 @@ function renderCupHero(){
       +'<div class="done">'+(ch?esc(TEAMS[ch].name):'To be decided')+'</div></div>';
     return;
   }
-  const hk=koTeam(t.hSrc), ak=koTeam(t.aSrc), ms=dt(t).getTime(), live=Date.now()>=ms;
-  const sd=(k,src,r)=>'<div class="sd'+(r?' r':'')+'">'+crest(k,58)
-      +'<b>'+(k?esc(TEAMS[k].name.replace(' FC','')):esc(srcLabel(src)))+'</b></div>';
+  const hk=tieSide(t,'h'), ak=tieSide(t,'a'), ms=dt(t).getTime(), live=Date.now()>=ms;
+  const sd=(k,sdn,r)=>'<div class="sd'+(r?' r':'')+(k?' go':'')+'"'
+      +(k?(' data-team="'+esc(k)+'" role="button" tabindex="0"'):'')+'>'
+      +crest(k,72)
+      +'<div class="nm"><b>'+(k?esc(TEAMS[k].name.replace(' FC','')):'TBD')+'</b>'
+      +'<u>'+esc(sideLabel(t,sdn))+'</u></div></div>';
   host.className='kx-hero'+(live?' live':'');
   host.innerHTML='<div class="in">'
-    +'<div class="lab"><i></i>'+(live?'Kick-off':'Next on the court')+' &middot; '+esc(t.label)+'</div>'
-    +'<div class="mu">'+sd(hk,t.hSrc,false)+'<span class="vs">VS</span>'+sd(ak,t.aSrc,true)+'</div>'
+    +'<div class="lab"><span class="r"></span><i></i>'+(live?'Kick-off':'Next on the court')
+      +' &middot; '+esc(t.label)+'<span class="r"></span></div>'
+    +'<div class="mu">'+sd(hk,'h',false)+'<span class="kx-vs">VS</span>'+sd(ak,'a',true)+'</div>'
     +'<div class="when">'+longDate(t)+' &middot; '+clock12(t.time)+'</div>'
     +'<div class="kx-clock" data-cd="'+ms+'" data-cdf="cells">'
       +'<div class="c"><span>00</span><i>Days</i></div>'
@@ -3010,6 +3058,11 @@ function renderCupHero(){
       +'<div class="c"><span>00</span><i>Mins</i></div>'
       +'<div class="c"><span>00</span><i>Secs</i></div></div>'
     +'</div>';
+  $$('#cupHero .sd.go').forEach(el=>{
+    const go=()=>openTeam(el.dataset.team);
+    el.addEventListener('click',go);
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+  });
   tickClocks();
 }
 
@@ -3027,7 +3080,7 @@ function txList(){ return Array.isArray(state.transfers) ? state.transfers : [];
 function txQualified(){
   const out=[];
   KO_TIES.filter(t=>t.id!=='final').forEach(t=>{
-    [t.hSrc,t.aSrc].forEach(src=>{ const k=koTeam(src); if(k && out.indexOf(k)<0) out.push(k); });
+    ['h','a'].forEach(sd=>{ const k=tieSide(t,sd); if(k && out.indexOf(k)<0) out.push(k); });
   });
   return out;
 }
@@ -3203,21 +3256,70 @@ function renderContenders(){
   const host=$('#cupContend'); if(!host) return;
   const cards=[];
   KO_TIES.filter(t=>t.id!=='final').forEach(t=>{
-    [[t.hSrc,t],[t.aSrc,t]].forEach(pair=>{
-      const src=pair[0], tie=pair[1], key=koTeam(src);
+    ['h','a'].forEach(sd=>{
+      const key=tieSide(t,sd);
       if(key && TEAMS[key]){
-        cards.push('<div class="cd">'+crest(key,66)
+        cards.push('<div class="cd go" data-team="'+esc(key)+'" role="button" tabindex="0">'+crest(key,66)
           +'<b>'+esc(TEAMS[key].name.replace(' FC',''))+'</b>'
-          +'<i>'+esc(srcLabel(src))+'</i>'
-          +'<em>'+esc(tie.label)+'</em></div>');
+          +'<i>'+esc(sideLabel(t,sd))+'</i>'
+          +'<em>'+esc(t.label)+'</em>'
+          +'<span class="tap">Squad &amp; stats</span></div>');
       }else{
         cards.push('<div class="cd tbd"><div class="kx-ph">?</div>'
-          +'<b>To be decided</b><i>'+esc(srcLabel(src))+'</i>'
-          +'<em>'+esc(tie.label)+'</em></div>');
+          +'<b>To be decided</b><i>'+esc(sideLabel(t,sd))+'</i>'
+          +'<em>'+esc(t.label)+'</em></div>');
       }
     });
   });
+  if(admin) cards.push('<button class="btn sm kx-edit" id="koEdit">&#9998; Set the line-up</button>');
   host.innerHTML = cards.join('');
+  $$('#cupContend .cd.go').forEach(el=>{
+    const go=()=>openTeam(el.dataset.team);
+    el.addEventListener('click',go);
+    el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+  });
+  const eb=$('#koEdit'); if(eb) eb.addEventListener('click', openKoSeed);
+}
+
+/* organiser: pick the four clubs by hand */
+function openKoSeed(){
+  if(!admin){ toast('Organiser code needed','bad'); return; }
+  const ties=KO_TIES.filter(t=>t.id!=='final');
+  const opts=(sel)=>'<option value="">&mdash; from the table &mdash;</option>'
+    +Object.keys(TEAMS).map(k=>'<option value="'+esc(k)+'"'+(sel===k?' selected':'')+'>'
+      +esc(TEAMS[k].name)+'</option>').join('');
+  const body=ties.map(t=>{
+    const ov=koSeed()[t.id]||{};
+    return '<div class="field"><label>'+esc(t.label)+'</label>'
+      +'<div class="kx-pair">'
+      +'<select class="sel" data-tie="'+esc(t.id)+'" data-side="h">'+opts(ov.h||'')+'</select>'
+      +'<span>v</span>'
+      +'<select class="sel" data-tie="'+esc(t.id)+'" data-side="a">'+opts(ov.a||'')+'</select>'
+      +'</div></div>';
+  }).join('');
+  openVeil('<div class="modal-h"><h3>Semi-final line-up</h3><button class="btn sm x">Close</button></div>'
+   +'<div class="modal-b"><p class="pr-hint">Leave a slot on &ldquo;from the table&rdquo; and it keeps '
+   +'seeding itself from the group standings. Results already recorded are not touched.</p>'
+   +body
+   +'<div class="pr-cta"><button class="btn" id="koReset">Back to automatic</button>'
+   +'<button class="btn solid" id="koSave">Save the line-up</button></div></div>');
+  $('#koSave').addEventListener('click', async ()=>{
+    const seed={};
+    $$('#veilHost select[data-tie]').forEach(s=>{
+      if(!s.value) return;
+      seed[s.dataset.tie]=seed[s.dataset.tie]||{};
+      seed[s.dataset.tie][s.dataset.side]=s.value;
+    });
+    const flat=[];
+    Object.keys(seed).forEach(k=>['h','a'].forEach(sd=>{ if(seed[k][sd]) flat.push(seed[k][sd]); }));
+    if(new Set(flat).size!==flat.length){ toast('A club is picked twice','bad'); return; }
+    await pullState(); state.koSeed=seed; await pushState();
+    renderAll(); closeVeil(); toast('Line-up saved');
+  });
+  $('#koReset').addEventListener('click', async ()=>{
+    await pullState(); delete state.koSeed; await pushState();
+    renderAll(); closeVeil(); toast('Back to the automatic draw');
+  });
 }
 
 function bracketHTML(){
@@ -3376,7 +3478,7 @@ function isKO(key){ return typeof key==='string' && KO_TIES.some(t=>t.id===key);
 function matchInfo(key){
   if(isKO(key)){
     const t=KO_TIES.filter(k=>k.id===key)[0], sc=state.ko[key]||{};
-    const h=koTeam(t.hSrc), a=koTeam(t.aSrc);
+    const h=tieSide(t,'h'), a=tieSide(t,'a');
     return {h:h, a:a, tie:t, label:t.label, date:t.date, time:t.time,
             r:(sc.hs!=null&&sc.as!=null)?{hs:sc.hs,as:sc.as}:null, pens:(sc.ph!=null&&sc.pa!=null)?{h:sc.ph,a:sc.pa}:null};
   }
@@ -3569,7 +3671,7 @@ function drawMatch(){
 function openKO(id){
   if(!admin) return;
   const t=KO_TIES.filter(k=>k.id===id)[0], sc=state.ko[id]||{};
-  const hk=koTeam(t.hSrc), ak=koTeam(t.aSrc);
+  const hk=tieSide(t,'h'), ak=tieSide(t,'a');
   if(!hk||!ak){ toast('Both teams are not decided yet','bad'); return; }
   draft={ i:id, hs:sc.hs==null?0:sc.hs, as:sc.as==null?0:sc.as,
           ph:sc.ph==null?0:sc.ph, pa:sc.pa==null?0:sc.pa,
@@ -4062,7 +4164,7 @@ function prTie(ref){ return KO_TIES.filter(t=>t.id===prKoId(ref))[0]; }
 function prSides(ref){
   if(!prIsKo(ref)){ const f=FIXTURES[ref]; return {h:f.h, a:f.a}; }
   const t=prTie(ref); if(!t) return null;
-  return {h:koTeam(t.hSrc), a:koTeam(t.aSrc)};
+  return {h:tieSide(t,'h'), a:tieSide(t,'a')};
 }
 function prWhen(ref){
   const t = prIsKo(ref) ? prTie(ref) : FIXTURES[ref];
