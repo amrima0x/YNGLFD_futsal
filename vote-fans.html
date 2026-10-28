@@ -82,6 +82,23 @@ option{background:#16161a;color:#fff}
   border:2px solid #1a1407;border-top:0;border-left:0;transform:rotate(45deg)}
 .none{color:var(--dim);text-align:center;padding:30px 0;font-size:15px}
 
+/* ---------- club grid ---------- */
+.clubs{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:6px}
+@media(min-width:560px){.clubs{grid-template-columns:1fr 1fr 1fr}}
+.club{display:flex;align-items:center;gap:13px;padding:13px;border-radius:15px;cursor:pointer;
+  background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);color:var(--ink);
+  text-align:start;width:100%}
+.club:hover{background:rgba(255,255,255,.08);border-color:var(--line)}
+.club .sh{width:46px;height:52px;border-radius:9px 9px 16px 16px;flex:none;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Inter';font-weight:900;font-size:15px;letter-spacing:.02em}
+.club .cw{display:flex;flex-direction:column;min-width:0}
+.club .cn{display:block;font-family:'Inter';font-weight:700;font-size:15px;line-height:1.25;
+  direction:ltr;text-align:start}
+.club .cc{display:block;font-size:12px;color:var(--dim);margin-top:4px;direction:rtl;text-align:start}
+.curpick{font-size:14px;color:var(--gold);text-align:center;margin-bottom:11px;
+  font-family:'Inter';direction:ltr}
+
 /* ---------- sticky submit ---------- */
 .bar{position:sticky;bottom:0;padding:14px 0 calc(14px + env(safe-area-inset-bottom));
   background:linear-gradient(0deg,#09090b 62%,rgba(9,9,11,0))}
@@ -140,9 +157,12 @@ td.en{font-size:14px;white-space:nowrap}
   <section id="s2" class="hide">
     <div id="who" class="ok"></div>
     <div class="search"><input type="text" id="q" placeholder="ابحث عن لاعب أو فريق…"></div>
+    <div id="clubs" class="clubs hide"></div>
     <div id="list"></div>
     <div class="bar">
+      <div id="curpick" class="curpick hide"></div>
       <button class="btn" id="send" disabled>إرسال التصويت</button>
+      <button class="btn ghost hide" id="toclubs" style="margin-top:9px">‹ كل الفرق</button>
       <button class="btn ghost" id="back" style="margin-top:9px">رجوع</button>
     </div>
   </section>
@@ -190,11 +210,13 @@ const PLAYERS=[{"t": "eagles", "n": "Ammar Barzeeq", "no": "13"}, {"t": "eagles"
 const CFG = {
   VOTE_KEY      : 'ynglfd-fan-vote-2026',   // its own branch — never touches the board's data
   ADMIN_CODE    : 'FANS2026', // opens the results view
-  ALLOW_OWN_TEAM: false,            // true = a voter may pick a player from his own club
+  ALLOW_OWN_TEAM: true,            // true = a voter may pick a player from his own club
   ONE_VOTE_PER  : 'person',      // 'club' = one vote per club · 'person' = one per name
+  CLUB_FIRST    : true,    // true = pick a club first, then that club's players
   CLOSES        : '2026-11-04T19:30:00+03:00'
 };
 const BYCLUB = CFG.ONE_VOTE_PER === 'club';
+let curClub = null;
 
 const FIREBASE_CONFIG = {
   apiKey:      "AIzaSyAxP3w9yAfLrb7e_fEi0tEmmK_Y_PXXTao",
@@ -289,7 +311,8 @@ $('#go').addEventListener('click', async () => {
       + (CFG.ALLOW_OWN_TEAM ? '' : ' لاعبو ناديك غير مدرجين في القائمة.');
     pick = null;
   }
-  $('#q').value = '';
+  $('#q').value = ''; curClub = null;
+  if (CFG.CLUB_FIRST) renderClubs();
   renderList(); show('s2');
 });
 
@@ -301,11 +324,56 @@ function eligible(){
     .filter(p => CFG.ALLOW_OWN_TEAM || p.t !== me.team);
 }
 
+function renderClubs(){
+  const box = $('#clubs'); box.innerHTML = '';
+  Object.keys(TEAMS).forEach(k => {
+    const t = TEAMS[k], n = PLAYERS.filter(p => p.t === k).length;
+    const b = document.createElement('button');
+    b.className = 'club'; b.type = 'button';
+    const sh = document.createElement('span');
+    sh.className = 'sh'; sh.style.background = t.pri; sh.style.color = t.sec;
+    sh.style.boxShadow = 'inset 0 0 0 2px ' + t.sec;
+    sh.textContent = t.ini;
+    const w = document.createElement('span'); w.className = 'cw';
+    const cn = document.createElement('span'); cn.className = 'cn'; cn.textContent = t.name;
+    const cc = document.createElement('span'); cc.className = 'cc'; cc.textContent = n + ' لاعبين';
+    w.appendChild(cn); w.appendChild(cc);
+    b.appendChild(sh); b.appendChild(w);
+    b.addEventListener('click', () => {
+      curClub = k; $('#q').value = ''; renderList(); window.scrollTo({top:0});
+    });
+    box.appendChild(b);
+  });
+}
+
+function showPick(){
+  const el = $('#curpick');
+  if (pick === null){ el.classList.add('hide'); return; }
+  const p = PLAYERS[pick];
+  el.classList.remove('hide');
+  el.textContent = '✓ ' + p.n + ' — ' + TEAMS[p.t].name;
+}
+
 function renderList(){
   const q = $('#q').value.trim().toLowerCase();
-  const rows = eligible().filter(p =>
-    !q || p.n.toLowerCase().includes(q) || TEAMS[p.t].name.toLowerCase().includes(q) || p.no === q);
-  const box = $('#list'); box.innerHTML = '';
+  const box = $('#list');
+  showPick();
+
+  if (CFG.CLUB_FIRST && !q && !curClub){           // the club grid is the first screen
+    $('#clubs').classList.remove('hide');
+    $('#toclubs').classList.add('hide');
+    box.innerHTML = '';
+    $('#send').disabled = pick === null;
+    return;
+  }
+  $('#clubs').classList.add('hide');
+  $('#toclubs').classList.toggle('hide', !CFG.CLUB_FIRST);
+
+  let rows = eligible();
+  if (q) rows = rows.filter(p =>
+    p.n.toLowerCase().includes(q) || TEAMS[p.t].name.toLowerCase().includes(q) || p.no === q);
+  else if (curClub) rows = rows.filter(p => p.t === curClub);
+  box.innerHTML = '';
 
   if (!rows.length){ const d = document.createElement('div'); d.className='none';
     d.textContent = 'ما فيه نتائج'; box.appendChild(d); return; }
@@ -331,12 +399,16 @@ function renderList(){
       pick = p.i;
       $$('.p').forEach(x => x.classList.toggle('sel', +x.dataset.i === pick));
       $('#send').disabled = false;
+      showPick();
     });
     grp.appendChild(b);
   });
   $('#send').disabled = pick === null;
 }
-$('#q').addEventListener('input', renderList);
+$('#q').addEventListener('input', () => { if ($('#q').value.trim()) curClub = null; renderList(); });
+$('#toclubs').addEventListener('click', () => {
+  curClub = null; $('#q').value = ''; renderList(); window.scrollTo({top:0});
+});
 
 /* ---------- submit ---------- */
 $('#send').addEventListener('click', async () => {
@@ -362,7 +434,11 @@ $('#send').addEventListener('click', async () => {
   } finally { btn.disabled = false; btn.textContent = 'إرسال التصويت'; }
 });
 
-$('#again').addEventListener('click', () => { renderList(); show('s2'); });
+$('#again').addEventListener('click', () => {
+  curClub = null; $('#q').value = '';
+  if (CFG.CLUB_FIRST) renderClubs();
+  renderList(); show('s2');
+});
 
 /* ---------- results ---------- */
 $('#admin').addEventListener('click', () => {
