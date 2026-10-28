@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>أفضل لاعب في البطولة — تصويت الكباتن | YNGLFD Futsal Cup 2026</title>
+<meta name="theme-color" content="#09090b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<style>
+:root{
+  --bg:#09090b; --bg2:#0f0f12; --line:rgba(216,184,110,.22);
+  --gold:#d8b86e; --gold2:#f3dda6; --ink:#f3f4f7; --dim:#8b93a6;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--bg)}
+body{
+  font-family:'Tajawal',system-ui,sans-serif; color:var(--ink);
+  min-height:100dvh; -webkit-font-smoothing:antialiased;
+  background:
+    radial-gradient(120% 60% at 50% -10%, rgba(216,184,110,.16) 0%, rgba(216,184,110,0) 60%),
+    linear-gradient(170deg,#0b0b0d,#09090b 45%,#0d0c0a);
+  background-attachment:fixed;
+}
+.en{font-family:'Inter',sans-serif;direction:ltr;unicode-bidi:isolate}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 56px}
+
+/* ---------- header ---------- */
+header{padding:26px 0 18px;text-align:center}
+.kicker{font-family:'Inter';font-size:12px;font-weight:800;letter-spacing:.3em;color:var(--gold);
+  direction:ltr}
+h1{font-size:30px;font-weight:800;margin-top:10px;line-height:1.25}
+.sub{color:var(--dim);font-size:15px;margin-top:8px}
+.rule{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:20px 0}
+
+/* ---------- cards ---------- */
+.card{background:linear-gradient(170deg,rgba(255,255,255,.045),rgba(255,255,255,.015));
+  border:1px solid rgba(255,255,255,.08); border-radius:18px; padding:18px; margin-bottom:14px}
+.lbl{font-size:13px;font-weight:700;color:var(--gold);letter-spacing:.04em;margin-bottom:9px;display:block}
+input,select,button{font-family:inherit;font-size:16px}
+input[type=text],select{
+  width:100%; padding:14px 15px; border-radius:12px; color:var(--ink);
+  background:rgba(255,255,255,.055); border:1px solid rgba(255,255,255,.12); outline:none}
+input[type=text]:focus,select:focus{border-color:var(--gold);background:rgba(255,255,255,.08)}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),
+  linear-gradient(135deg,var(--gold) 50%,transparent 50%);
+  background-position:calc(0% + 18px) calc(50% - 2px),calc(0% + 24px) calc(50% - 2px);
+  background-size:6px 6px,6px 6px;background-repeat:no-repeat}
+option{background:#16161a;color:#fff}
+.btn{display:block;width:100%;padding:16px;border:0;border-radius:14px;cursor:pointer;
+  font-weight:800;font-size:17px;color:#1a1407;
+  background:linear-gradient(140deg,#fdf3d6,#e5c377 46%,#cfa246)}
+.btn[disabled]{opacity:.38;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--gold);border:1px solid var(--line)}
+.hint{font-size:13px;color:var(--dim);margin-top:10px;line-height:1.7}
+.err{background:rgba(226,72,60,.12);border:1px solid rgba(226,72,60,.4);color:#ffbdb6;
+  padding:13px 15px;border-radius:12px;font-size:14px;margin-bottom:14px;line-height:1.7}
+.ok{background:rgba(159,227,213,.1);border:1px solid rgba(159,227,213,.32);color:#bfeadf;
+  padding:13px 15px;border-radius:12px;font-size:14px;margin-bottom:14px;line-height:1.7}
+
+/* ---------- player list ---------- */
+.search{position:sticky;top:0;z-index:5;padding:10px 0 12px;
+  background:linear-gradient(180deg,#09090b 70%,rgba(9,9,11,0))}
+.tgroup{margin-top:18px}
+.thead{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.dot{width:11px;height:11px;border-radius:3px;flex:none}
+.tname{font-family:'Inter';font-size:13px;font-weight:800;letter-spacing:.17em;color:var(--dim);direction:ltr}
+.p{display:flex;align-items:center;gap:13px;width:100%;text-align:start;
+  padding:12px 14px;margin-bottom:7px;border-radius:13px;cursor:pointer;
+  background:rgba(255,255,255,.04);border:1px solid transparent;color:var(--ink)}
+.p:hover{background:rgba(255,255,255,.07)}
+.p.sel{border-color:var(--gold);background:linear-gradient(90deg,rgba(216,184,110,.2),rgba(216,184,110,.05))}
+.p .no{font-family:'Inter';font-weight:800;font-size:15px;color:var(--gold);min-width:30px;text-align:center}
+.p .nm{font-family:'Inter';font-weight:600;font-size:16.5px;flex:1;direction:ltr;text-align:left}
+.p .tick{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.22);flex:none}
+.p.sel .tick{border-color:var(--gold);background:var(--gold);position:relative}
+.p.sel .tick:after{content:'';position:absolute;left:6px;top:2px;width:6px;height:11px;
+  border:2px solid #1a1407;border-top:0;border-left:0;transform:rotate(45deg)}
+.none{color:var(--dim);text-align:center;padding:30px 0;font-size:15px}
+
+/* ---------- sticky submit ---------- */
+.bar{position:sticky;bottom:0;padding:14px 0 calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(0deg,#09090b 62%,rgba(9,9,11,0))}
+
+/* ---------- done ---------- */
+.done{text-align:center;padding:14px 0 6px}
+.star{font-size:46px}
+.pick{font-family:'Inter';font-size:30px;font-weight:900;margin-top:12px;direction:ltr}
+.pickt{color:var(--gold);font-size:15px;margin-top:8px;font-family:'Inter';direction:ltr}
+
+/* ---------- results ---------- */
+.bars{margin-top:6px}
+.brow{margin-bottom:13px}
+.bmeta{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+.bn{font-family:'Inter';font-size:15px;font-weight:700;direction:ltr}
+.bc{font-family:'Inter';font-size:14px;font-weight:800;color:var(--gold)}
+.btrack{height:9px;border-radius:99px;background:rgba(255,255,255,.07);overflow:hidden}
+.bfill{height:100%;border-radius:99px;background:linear-gradient(90deg,#cfa246,#f3dda6)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{padding:10px 8px;text-align:start;border-bottom:1px solid rgba(255,255,255,.07)}
+th{color:var(--gold);font-size:12px;letter-spacing:.08em;font-weight:700;white-space:nowrap}
+td.en{font-size:14px;white-space:nowrap}
+.foot{text-align:center;color:#50566a;font-size:12px;margin-top:26px;letter-spacing:.06em}
+.linkish{background:none;border:0;color:#5c6276;font-size:12px;cursor:pointer;
+  letter-spacing:.1em;font-family:'Inter';padding:8px}
+.hide{display:none !important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">YNGLFD FUTSAL CUP 2026</div>
+    <h1>جائزة أفضل لاعب في البطولة</h1>
+    <div class="sub">تصويت كباتن الفرق — صوت واحد لكل نادٍ</div>
+  </header>
+  <div class="rule"></div>
+
+  <div id="boot" class="card"><div class="hint" style="text-align:center">…جارٍ التحميل</div></div>
+
+  <!-- step 1 -->
+  <section id="s1" class="hide">
+    <div id="s1err"></div>
+    <div class="card">
+      <label class="lbl" for="vname">اسمك</label>
+      <input type="text" id="vname" autocomplete="name" placeholder="الاسم الكامل">
+    </div>
+    <div class="card">
+      <label class="lbl" for="vteam">فريقك</label>
+      <select id="vteam"><option value="">— اختر الفريق —</option></select>
+    </div>
+    <div class="bar"><button class="btn" id="go" disabled>التالي — اختيار اللاعب</button></div>
+    <div class="hint">تصويتك مسجّل باسمك واسم ناديك، ويُرسل لإدارة البطولة فقط.</div>
+  </section>
+
+  <!-- step 2 -->
+  <section id="s2" class="hide">
+    <div id="who" class="ok"></div>
+    <div class="search"><input type="text" id="q" placeholder="ابحث عن لاعب أو فريق…"></div>
+    <div id="list"></div>
+    <div class="bar">
+      <button class="btn" id="send" disabled>إرسال التصويت</button>
+      <button class="btn ghost" id="back" style="margin-top:9px">رجوع</button>
+    </div>
+  </section>
+
+  <!-- step 3 -->
+  <section id="s3" class="hide">
+    <div class="card done">
+      <div class="star">🏆</div>
+      <div style="color:var(--gold);font-weight:700;margin-top:8px">تم تسجيل تصويتك</div>
+      <div class="pick" id="dpick"></div>
+      <div class="pickt" id="dteam"></div>
+      <div class="hint" id="dwho" style="margin-top:16px"></div>
+    </div>
+    <button class="btn ghost" id="again">تعديل التصويت</button>
+  </section>
+
+  <!-- results -->
+  <section id="s4" class="hide">
+    <div class="card">
+      <div class="lbl">النتائج المباشرة</div>
+      <div id="tally" class="bars"></div>
+    </div>
+    <div class="card">
+      <div class="lbl">من صوّت</div>
+      <div style="overflow-x:auto"><table id="voters"></table></div>
+    </div>
+    <button class="btn ghost" id="csv">تنزيل النتائج CSV</button>
+    <button class="btn ghost" id="exit" style="margin-top:9px">رجوع</button>
+  </section>
+
+  <div style="text-align:center"><button class="linkish" id="admin">· · ·</button></div>
+  <div class="foot en">YANBU NGL FRACTIONATION &middot; PLAY. CONNECT. INSPIRE.</div>
+</div>
+
+<script>
+const TEAMS={"eagles": {"name": "Eagles FC", "ini": "EGL", "pri": "#1A2A6C", "sec": "#F5D76E", "cap": "Ammar Barzeeq"}, "elite": {"name": "Elite FC", "ini": "ELT", "pri": "#B34700", "sec": "#FFD9A0", "cap": "Abdulrahman Alhajouri"}, "falcons": {"name": "Falcons FC", "ini": "FAL", "pri": "#0B6E4F", "sec": "#F2F2F2", "cap": "Majed Abdulaal"}, "rangers": {"name": "Rangers FC", "ini": "RNG", "pri": "#0A4A45", "sec": "#9FE3D5", "cap": "Mohammed Bawazeer"}, "lions": {"name": "Lions FC", "ini": "LIO", "pri": "#243447", "sec": "#E0B159", "cap": "Bandar Almadani"}, "warriors": {"name": "Warriors FC", "ini": "WAR", "pri": "#8E1B1B", "sec": "#F0D9A0", "cap": "Nawaf Alotaibi"}, "titans": {"name": "Titans FC", "ini": "TTN", "pri": "#6E1B2B", "sec": "#E8C86A", "cap": "Omar Aljohani"}, "vipers": {"name": "Vipers FC", "ini": "VPR", "pri": "#1E5F3A", "sec": "#C8E6C9", "cap": "Ahmed Bin Qurban"}, "legends": {"name": "Legends FC", "ini": "LGD", "pri": "#12325C", "sec": "#E8B93B", "cap": "Kamal Badroom"}, "thunder": {"name": "Thunder FC", "ini": "THD", "pri": "#4A2472", "sec": "#E0C3F5", "cap": "Raad Najjar"}, "sharks": {"name": "Sharks FC", "ini": "SHK", "pri": "#1F6F8B", "sec": "#BFE6F0", "cap": ""}, "spartans": {"name": "Spartans FC", "ini": "SPT", "pri": "#8A6A1F", "sec": "#F0DFA8", "cap": ""}};
+const PLAYERS=[{"t": "eagles", "n": "Ammar Barzeeq", "no": "13"}, {"t": "eagles", "n": "Firas Alhubaishi", "no": "3"}, {"t": "eagles", "n": "Abdullah Alsheikhi", "no": "20"}, {"t": "eagles", "n": "Abdulrahman Alziyadi", "no": "11"}, {"t": "eagles", "n": "Abdulrahman Alfayedi", "no": "28"}, {"t": "eagles", "n": "Mohammed Aljohani", "no": "10"}, {"t": "eagles", "n": "Turki Jameel Aldeen", "no": "97"}, {"t": "eagles", "n": "Ahmed Albalawi (GK)", "no": "1"}, {"t": "eagles", "n": "Mazen Almustadi", "no": "6"}, {"t": "elite", "n": "Ahmed Almughaddawi", "no": "4"}, {"t": "elite", "n": "Abdulrahman Alhajouri", "no": "13"}, {"t": "elite", "n": "Abdulkhaliq Almudaeth", "no": "9"}, {"t": "elite", "n": "Faris Hakami", "no": "10"}, {"t": "elite", "n": "Mohammed Sindi", "no": "7"}, {"t": "elite", "n": "Mutaib Aljohani", "no": "6"}, {"t": "elite", "n": "Ramez Aljohani", "no": "24"}, {"t": "elite", "n": "Mohammed Alsubhi", "no": "5"}, {"t": "elite", "n": "Abdulaziz Aloteeq (GK)", "no": "1"}, {"t": "falcons", "n": "Majed Abdulaal", "no": "24"}, {"t": "falcons", "n": "Rayan Alghamdi", "no": "6"}, {"t": "falcons", "n": "Sami Aljohani", "no": "11"}, {"t": "falcons", "n": "Hesham Alem", "no": "1"}, {"t": "falcons", "n": "Abed Alharbi", "no": "4"}, {"t": "falcons", "n": "Abdulwahed Aljohani", "no": "9"}, {"t": "falcons", "n": "Anwar Alghamdi", "no": "10"}, {"t": "falcons", "n": "Khalid Alharthi", "no": "8"}, {"t": "falcons", "n": "Abdullah Alansari", "no": "18"}, {"t": "rangers", "n": "Mohammed Bawazeer", "no": "10"}, {"t": "rangers", "n": "Hassan Alfazi", "no": "16"}, {"t": "rangers", "n": "Baraa Alyamani", "no": "5"}, {"t": "rangers", "n": "Abdulaziz Al Abdullatif", "no": "3"}, {"t": "rangers", "n": "Faisal Alzanbaqi", "no": "1"}, {"t": "rangers", "n": "Saif Alnefaie", "no": "11"}, {"t": "rangers", "n": "Khaled Almoaiqali", "no": "18"}, {"t": "rangers", "n": "Mohammed Aljohni", "no": "99"}, {"t": "rangers", "n": "Jassar Hassan", "no": "67"}, {"t": "lions", "n": "Abdullah Aloufi", "no": "7"}, {"t": "lions", "n": "Bandar Almadani", "no": "8"}, {"t": "lions", "n": "Mohammed Balharith", "no": "10"}, {"t": "lions", "n": "Mohammed Bin Salman", "no": "5"}, {"t": "lions", "n": "Anas Basha", "no": "1"}, {"t": "lions", "n": "Basem Alsubhi", "no": "12"}, {"t": "lions", "n": "Faisal Alfazi", "no": "4"}, {"t": "lions", "n": "Abdullah Alhazmi", "no": "17"}, {"t": "lions", "n": "Mohammed Alsinani", "no": "11"}, {"t": "warriors", "n": "Nawaf Alotaibi", "no": "11"}, {"t": "warriors", "n": "Ali Alharbi", "no": "99"}, {"t": "warriors", "n": "Muath Alnazzawi", "no": "10"}, {"t": "warriors", "n": "Abdullah Algaidi", "no": "4"}, {"t": "warriors", "n": "Khaled Juhani", "no": "8"}, {"t": "warriors", "n": "Bongani Maluleke", "no": "7"}, {"t": "warriors", "n": "Ismail Alghamdi", "no": "6"}, {"t": "warriors", "n": "Faisal Aljohani", "no": "18"}, {"t": "warriors", "n": "Zuhair Zulaly", "no": "17"}, {"t": "titans", "n": "Turki Abu Alola", "no": "12"}, {"t": "titans", "n": "Rayan Qutub", "no": "69"}, {"t": "titans", "n": "Omar Aljohani", "no": "10"}, {"t": "titans", "n": "Johnpaul", "no": "4"}, {"t": "titans", "n": "Abdullah Alsubhi", "no": "11"}, {"t": "titans", "n": "Nawaf Alsubaie", "no": "6"}, {"t": "titans", "n": "Alaa Alsharif", "no": "13"}, {"t": "titans", "n": "Eyad Alqurashi (GK)", "no": "1"}, {"t": "titans", "n": "Mohammed Alghamdi", "no": "8"}, {"t": "vipers", "n": "Ali Alshehri", "no": "6"}, {"t": "vipers", "n": "Ahmed Bin Qurban", "no": "7"}, {"t": "vipers", "n": "Nayif Alhobaishy", "no": "4"}, {"t": "vipers", "n": "Murad Sakran", "no": "1"}, {"t": "vipers", "n": "Badr Aljohani", "no": "9"}, {"t": "vipers", "n": "Khalid Almarwani", "no": "8"}, {"t": "vipers", "n": "Abdulaziz Hejori", "no": "3"}, {"t": "vipers", "n": "Mohammed Alahmadi", "no": "5"}, {"t": "vipers", "n": "Suhail Aljohani", "no": "10"}, {"t": "legends", "n": "Abu Rayan", "no": "1"}, {"t": "legends", "n": "Kamal Badroom", "no": "2"}, {"t": "legends", "n": "Hameed Sabr", "no": "5"}, {"t": "legends", "n": "Hani Abu Naif", "no": "10"}, {"t": "legends", "n": "Emad Al-Omdah", "no": "9"}, {"t": "legends", "n": "Mohammed Al-Amoudi", "no": "6"}, {"t": "legends", "n": "Rami", "no": "18"}, {"t": "legends", "n": "Mishari", "no": "3"}, {"t": "legends", "n": "Aref", "no": "7"}, {"t": "thunder", "n": "Mohammed A Aljohani", "no": "9"}, {"t": "thunder", "n": "Hashim M Dhahri", "no": "6"}, {"t": "thunder", "n": "Raad Najjar", "no": "18"}, {"t": "thunder", "n": "Mazeen Atlas", "no": "13"}, {"t": "thunder", "n": "Amayer Albeladi", "no": "4"}, {"t": "thunder", "n": "Adel M. Al-Solami", "no": "7"}, {"t": "thunder", "n": "Mohsin Mushtaq", "no": "5"}, {"t": "thunder", "n": "Abdulraheem Beladi", "no": "8"}, {"t": "thunder", "n": "Muhannad Al-Harbi", "no": "10"}, {"t": "sharks", "n": "Ahmed Dawood", "no": "2"}, {"t": "sharks", "n": "Hamzah Shuaib", "no": "15"}, {"t": "sharks", "n": "Musab Alharbi", "no": "9"}, {"t": "sharks", "n": "Abdullah Aidroos", "no": "4"}, {"t": "sharks", "n": "Osama Aljohani", "no": "24"}, {"t": "sharks", "n": "Sulaiman Almani", "no": "12"}, {"t": "sharks", "n": "Ahmed Mugheeth", "no": "6"}, {"t": "sharks", "n": "Rayan Alhindi", "no": "28"}, {"t": "sharks", "n": "Muayad Bahaidan", "no": "13"}, {"t": "sharks", "n": "Albaraa Halawani", "no": "17"}, {"t": "spartans", "n": "Muath Alessa", "no": "3"}, {"t": "spartans", "n": "Abdullah Khayat", "no": "4"}, {"t": "spartans", "n": "Abdulaziz Alghamdi", "no": "5"}, {"t": "spartans", "n": "Khalid Alqarni", "no": "6"}, {"t": "spartans", "n": "Hani", "no": "7"}, {"t": "spartans", "n": "Mohammed Alzahrani", "no": "8"}, {"t": "spartans", "n": "Hussam Alghamdi", "no": "9"}, {"t": "spartans", "n": "Abdulaziz Abu Battal", "no": "11"}, {"t": "spartans", "n": "Eyad Aljohani", "no": "13"}, {"t": "spartans", "n": "Hamad Alsayed", "no": "15"}, {"t": "spartans", "n": "Mohammed Aldaqeel", "no": "24"}];
+</script>
+<script>
+/* ===================================================================
+   YNGLFD FUTSAL CUP 2026 — Player of the Tournament, captains' vote
+   -------------------------------------------------------------------
+   Everything you may want to change lives in CFG, right here.
+   =================================================================== */
+const CFG = {
+  VOTE_KEY      : 'ynglfd-mvp-vote-2026',   // its own branch — never touches the board's data
+  ADMIN_CODE    : 'YNGLFD2026', // opens the results view
+  ALLOW_OWN_TEAM: false,            // true = a voter may pick a player from his own club
+  ONE_VOTE_PER  : 'club',      // 'club' = one vote per club · 'person' = one per name
+  CLOSES        : '2026-11-04T19:30:00+03:00'
+};
+const BYCLUB = CFG.ONE_VOTE_PER === 'club';
+
+const FIREBASE_CONFIG = {
+  apiKey:      "AIzaSyAxP3w9yAfLrb7e_fEi0tEmmK_Y_PXXTao",
+  authDomain:  "futsal-tournament-f0631.firebaseapp.com",
+  databaseURL: "https://futsal-tournament-f0631-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:   "futsal-tournament-f0631"
+};
+
+/* ------------------------------------------------------------------ */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const show = id => { ['s1','s2','s3','s4'].forEach(k => $('#'+k).classList.toggle('hide', k !== id));
+                     window.scrollTo({top:0}); };
+
+let ref = null, me = { name:'', team:'' }, pick = null, votesCache = {};
+
+const slug = s => s.toLowerCase().normalize('NFKD')
+  .replace(/[^a-z0-9\u0621-\u064a]+/g,'-').replace(/^-+|-+$/g,'').slice(0,42) || 'x';
+const docKey = () => BYCLUB ? me.team : me.team + '__' + slug(me.name);
+
+function deviceId(){
+  try {
+    let d = localStorage.getItem('ynglfd-dev');
+    if (!d){ d = (Date.now().toString(36) + Math.random().toString(36).slice(2,8)); 
+             localStorage.setItem('ynglfd-dev', d); }
+    return d;
+  } catch(e){ return 'n/a'; }
+}
+
+/* ---------- boot ---------- */
+(async function boot(){
+  const teamSel = $('#vteam');
+  Object.keys(TEAMS).forEach(k => {
+    const o = document.createElement('option');
+    o.value = k; o.textContent = TEAMS[k].name; teamSel.appendChild(o);
+  });
+
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    ref = firebase.database().ref(CFG.VOTE_KEY + '/votes');
+    if (firebase.auth) { try { await firebase.auth().signInAnonymously(); } catch(e){} }
+    await ref.limitToFirst(1).once('value');            // prove we can read
+  } catch (e) {
+    $('#boot').innerHTML = '';
+    $('#boot').appendChild(errBox(
+      'ما نقدر نوصل لقاعدة البيانات حالياً. تأكد من الاتصال بالإنترنت وأعد فتح الرابط، ' +
+      'ولو تكرر الخطأ بلّغ منظّم البطولة.'));
+    return;
+  }
+
+  try {
+    const saved = JSON.parse(localStorage.getItem('ynglfd-voter') || '{}');
+    if (saved.name) $('#vname').value = saved.name;
+    if (saved.team && TEAMS[saved.team]) teamSel.value = saved.team;
+  } catch(e){}
+
+  $('#boot').classList.add('hide');
+  show('s1'); validate1();
+
+  const p = new URLSearchParams(location.search);
+  if (p.get('admin') && p.get('admin') === CFG.ADMIN_CODE) openResults();
+})();
+
+function errBox(msg){ const d = document.createElement('div'); d.className = 'err'; d.textContent = msg; return d; }
+
+/* ---------- step 1 ---------- */
+function validate1(){
+  const ok = $('#vname').value.trim().length >= 3 && $('#vteam').value;
+  $('#go').disabled = !ok;
+}
+$('#vname').addEventListener('input', validate1);
+$('#vteam').addEventListener('change', validate1);
+
+$('#go').addEventListener('click', async () => {
+  me.name = $('#vname').value.trim();
+  me.team = $('#vteam').value;
+  try { localStorage.setItem('ynglfd-voter', JSON.stringify(me)); } catch(e){}
+
+  let prev = null;
+  try { prev = (await ref.child(docKey()).once('value')).val(); } catch(e){}
+  const who = $('#who');
+  if (prev) {
+    who.classList.remove('hide');
+    who.textContent = (BYCLUB
+        ? 'نادي ' + TEAMS[me.team].name + ' صوّت سابقاً (' + prev.voter + ')'
+        : 'سبق أن صوّت باسمك') + ' لـ ' + prev.pick.n + '. الإرسال الآن يستبدل ذلك التصويت.';
+    pick = PLAYERS.findIndex(p => p.n === prev.pick.n && p.t === prev.pick.t);
+    if (pick < 0) pick = null;
+  } else {
+    who.classList.remove('hide');
+    who.textContent = me.name + ' — ' + TEAMS[me.team].name + ' · اختر لاعباً واحداً من البطولة.'
+      + (CFG.ALLOW_OWN_TEAM ? '' : ' لاعبو ناديك غير مدرجين في القائمة.');
+    pick = null;
+  }
+  $('#q').value = '';
+  renderList(); show('s2');
+});
+
+$('#back').addEventListener('click', () => show('s1'));
+
+/* ---------- step 2 ---------- */
+function eligible(){
+  return PLAYERS.map((p,i) => ({...p, i}))
+    .filter(p => CFG.ALLOW_OWN_TEAM || p.t !== me.team);
+}
+
+function renderList(){
+  const q = $('#q').value.trim().toLowerCase();
+  const rows = eligible().filter(p =>
+    !q || p.n.toLowerCase().includes(q) || TEAMS[p.t].name.toLowerCase().includes(q) || p.no === q);
+  const box = $('#list'); box.innerHTML = '';
+
+  if (!rows.length){ const d = document.createElement('div'); d.className='none';
+    d.textContent = 'ما فيه نتائج'; box.appendChild(d); return; }
+
+  let cur = null, grp = null;
+  rows.forEach(p => {
+    if (p.t !== cur){
+      cur = p.t;
+      grp = document.createElement('div'); grp.className = 'tgroup';
+      const h = document.createElement('div'); h.className = 'thead';
+      const dot = document.createElement('span'); dot.className='dot'; dot.style.background = TEAMS[p.t].sec;
+      const nm = document.createElement('span'); nm.className='tname'; nm.textContent = TEAMS[p.t].name.toUpperCase();
+      h.appendChild(dot); h.appendChild(nm); grp.appendChild(h); box.appendChild(grp);
+    }
+    const b = document.createElement('button');
+    b.className = 'p' + (pick === p.i ? ' sel' : '');
+    b.type = 'button'; b.dataset.i = p.i;
+    const no = document.createElement('span'); no.className='no'; no.textContent = p.no || '–';
+    const nm = document.createElement('span'); nm.className='nm'; nm.textContent = p.n;
+    const tk = document.createElement('span'); tk.className='tick';
+    b.appendChild(no); b.appendChild(nm); b.appendChild(tk);
+    b.addEventListener('click', () => {
+      pick = p.i;
+      $$('.p').forEach(x => x.classList.toggle('sel', +x.dataset.i === pick));
+      $('#send').disabled = false;
+    });
+    grp.appendChild(b);
+  });
+  $('#send').disabled = pick === null;
+}
+$('#q').addEventListener('input', renderList);
+
+/* ---------- submit ---------- */
+$('#send').addEventListener('click', async () => {
+  if (pick === null) return;
+  const p = PLAYERS[pick], btn = $('#send');
+  btn.disabled = true; btn.textContent = '…جارٍ الإرسال';
+  try {
+    await ref.child(docKey()).set({
+      voter: me.name, team: me.team, teamName: TEAMS[me.team].name,
+      pick: { n: p.n, t: p.t, no: p.no, team: TEAMS[p.t].name },
+      dev: deviceId(), ts: Date.now(), at: new Date().toISOString()
+    });
+    $('#dpick').textContent = p.n;
+    $('#dteam').textContent = TEAMS[p.t].name + ' · No. ' + (p.no || '—');
+    $('#dwho').textContent = 'باسم ' + me.name + ' — ' + TEAMS[me.team].name;
+    show('s3');
+  } catch (e) {
+    const box = $('#who');
+    box.className = 'err'; box.classList.remove('hide');
+    box.textContent = (e && /permission/i.test(e.code || e.message || ''))
+      ? 'التصويت مرفوض من قاعدة البيانات — المنظّم لازم يفتح الصلاحية للفرع ' + CFG.VOTE_KEY + '.'
+      : 'ما قدرنا نرسل التصويت. تحقق من الاتصال وحاول مرة ثانية.';
+  } finally { btn.disabled = false; btn.textContent = 'إرسال التصويت'; }
+});
+
+$('#again').addEventListener('click', () => { renderList(); show('s2'); });
+
+/* ---------- results ---------- */
+$('#admin').addEventListener('click', () => {
+  const c = prompt('رمز المنظّم');
+  if (c === null) return;
+  if (c.trim() === CFG.ADMIN_CODE) openResults(); else alert('الرمز غير صحيح');
+});
+$('#exit').addEventListener('click', () => show(me.team ? 's1' : 's1'));
+
+let liveOn = false;
+function openResults(){
+  if (!liveOn){
+    liveOn = true;
+    ref.on('value', s => {
+      votesCache = s.val() || {};
+      if (!$('#s4').classList.contains('hide')) paintResults();
+    });
+  }
+  paintResults(); show('s4');
+}
+
+function rowsOf(){ return Object.values(votesCache).sort((a,b) => b.ts - a.ts); }
+
+function paintResults(){
+  const rows = rowsOf();
+  const count = {};
+  rows.forEach(v => { const k = v.pick.t + '|' + v.pick.n; count[k] = (count[k]||0) + 1; });
+  const sorted = Object.entries(count).sort((a,b) => b[1]-a[1]);
+  const max = sorted.length ? sorted[0][1] : 1;
+
+  const tally = $('#tally'); tally.innerHTML = '';
+  const tot = document.createElement('div');
+  tot.className = 'hint'; tot.style.marginTop = '0'; tot.style.marginBottom = '14px';
+  tot.textContent = 'إجمالي الأصوات: ' + rows.length + ' · عدد اللاعبين المرشّحين: ' + sorted.length;
+  tally.appendChild(tot);
+  if (!sorted.length){ const d=document.createElement('div'); d.className='none';
+    d.textContent='ما وصل أي تصويت بعد'; tally.appendChild(d); }
+  sorted.forEach(([k,c]) => {
+    const [t,n] = k.split('|');
+    const row = document.createElement('div'); row.className='brow';
+    const meta = document.createElement('div'); meta.className='bmeta';
+    const bn = document.createElement('span'); bn.className='bn en';
+    bn.textContent = n + ' — ' + TEAMS[t].name;
+    const bc = document.createElement('span'); bc.className='bc'; bc.textContent = c;
+    meta.appendChild(bn); meta.appendChild(bc);
+    const tr = document.createElement('div'); tr.className='btrack';
+    const fl = document.createElement('div'); fl.className='bfill'; fl.style.width = (c/max*100)+'%';
+    tr.appendChild(fl); row.appendChild(meta); row.appendChild(tr); tally.appendChild(row);
+  });
+
+  const tb = $('#voters'); tb.innerHTML = '';
+  const head = tb.insertRow();
+  [BYCLUB ? 'النادي' : 'الفريق', BYCLUB ? 'الكابتن' : 'الاسم',
+   'صوّت لـ','فريق اللاعب','الوقت'].forEach(h => {
+    const th = document.createElement('th'); th.textContent = h; head.appendChild(th); });
+  rows.forEach(v => {
+    const r = tb.insertRow();
+    const cells = [[v.teamName,1],[v.voter,0],[v.pick.n,1],[v.pick.team,1],
+                   [new Date(v.ts).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}),1]];
+    cells.forEach(([txt,en]) => { const c = r.insertCell(); c.textContent = txt; if(en) c.className='en'; });
+  });
+  const miss = BYCLUB ? Object.keys(TEAMS).filter(k => !votesCache[k]) : [];
+  if (miss.length){
+    const r = tb.insertRow(); const c = r.insertCell(); c.colSpan = 5;
+    c.style.color = '#8b93a6'; c.style.fontSize = '13px';
+    c.textContent = 'لم تصوّت بعد: ' + miss.map(k => TEAMS[k].name).join(' · ');
+  }
+}
+
+$('#csv').addEventListener('click', () => {
+  const rows = rowsOf();
+  const esc = s => '"' + String(s).replace(/"/g,'""') + '"';
+  const csv = ['Club,Captain,Voted for,Player club,Shirt,Time']
+    .concat(rows.map(v => [v.teamName, v.voter, v.pick.n, v.pick.team, v.pick.no || '',
+                           new Date(v.ts).toISOString()].map(esc).join(',')))
+    .join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'}));
+  a.download = 'YNGLFD_POTT_votes.csv'; a.click(); URL.revokeObjectURL(a.href);
+});
+</script>
+</body>
+</html>
