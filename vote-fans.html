@@ -146,6 +146,11 @@ td.en{font-size:14px;white-space:nowrap}
       <input type="text" id="vname" autocomplete="name" placeholder="الاسم الكامل">
     </div>
     <div class="card">
+      <label class="lbl" for="vbadge">الرقم الوظيفي</label>
+      <input type="text" id="vbadge" inputmode="numeric" maxlength="8" autocomplete="off" placeholder="مثال: 812345">
+      <div class="hint">صوت واحد فقط لكل رقم وظيفي. الرقم يظهر لمنظّم البطولة فقط.</div>
+    </div>
+    <div class="card">
       <label class="lbl" for="vteam">الفريق الذي تشجّعه</label>
       <select id="vteam"><option value="">— اختر الفريق —</option></select>
     </div>
@@ -171,10 +176,11 @@ td.en{font-size:14px;white-space:nowrap}
   <section id="s3" class="hide">
     <div class="card done">
       <div class="star">🏆</div>
-      <div style="color:var(--gold);font-weight:700;margin-top:8px">تم تسجيل تصويتك</div>
+      <div style="color:var(--gold);font-weight:700;margin-top:8px" id="dtitle">تم تسجيل تصويتك</div>
       <div class="pick" id="dpick"></div>
       <div class="pickt" id="dteam"></div>
       <div class="hint" id="dwho" style="margin-top:16px"></div>
+      <div class="hint hide" id="dnote" style="margin-top:6px"></div>
     </div>
     <button class="btn ghost" id="again">تعديل التصويت</button>
   </section>
@@ -187,6 +193,7 @@ td.en{font-size:14px;white-space:nowrap}
 <script>
 const TEAMS={"eagles": {"name": "Eagles FC", "ini": "EGL", "pri": "#1A2A6C", "sec": "#F5D76E"}, "elite": {"name": "Elite FC", "ini": "ELT", "pri": "#B34700", "sec": "#FFD9A0"}, "falcons": {"name": "Falcons FC", "ini": "FAL", "pri": "#0B6E4F", "sec": "#F2F2F2"}, "rangers": {"name": "Rangers FC", "ini": "RNG", "pri": "#0A4A45", "sec": "#9FE3D5"}, "lions": {"name": "Lions FC", "ini": "LIO", "pri": "#243447", "sec": "#E0B159"}, "warriors": {"name": "Warriors FC", "ini": "WAR", "pri": "#8E1B1B", "sec": "#F0D9A0"}, "titans": {"name": "Titans FC", "ini": "TTN", "pri": "#6E1B2B", "sec": "#E8C86A"}, "thunder": {"name": "Thunder FC", "ini": "THD", "pri": "#4A2472", "sec": "#E0C3F5"}, "sharks": {"name": "Sharks FC", "ini": "SHK", "pri": "#1F6F8B", "sec": "#BFE6F0"}, "spartans": {"name": "Spartans FC", "ini": "SPT", "pri": "#8A6A1F", "sec": "#F0DFA8"}};
 const PLAYERS=[{"t": "eagles", "n": "Ammar Barzeeq", "no": "13"}, {"t": "eagles", "n": "Firas Alhubaishi", "no": "3"}, {"t": "eagles", "n": "Abdullah Alsheikhi", "no": "20"}, {"t": "eagles", "n": "Ali Yousef", "no": "11"}, {"t": "eagles", "n": "Abdulrahman Alfayedi", "no": "28"}, {"t": "eagles", "n": "Mohammed Aljohani", "no": "10"}, {"t": "eagles", "n": "Turki Jameel Aldeen", "no": "97"}, {"t": "eagles", "n": "Ahmed Albalawi (GK)", "no": "1"}, {"t": "eagles", "n": "Mazen Almustadi", "no": "6"}, {"t": "eagles", "n": "Abdulrahman Merza", "no": "26"}, {"t": "elite", "n": "Ahmed Almoghathawi", "no": "4"}, {"t": "elite", "n": "Abdulrahman Alhajouri", "no": "13"}, {"t": "elite", "n": "Abdulkhaliq Almudaeth", "no": "9"}, {"t": "elite", "n": "Faris Hakami", "no": "10"}, {"t": "elite", "n": "Mohammed Sindi", "no": "7"}, {"t": "elite", "n": "Mutaib Aljohani", "no": "6"}, {"t": "elite", "n": "Ramez Aljohani", "no": "24"}, {"t": "elite", "n": "Mohammed Alsubhi", "no": "5"}, {"t": "elite", "n": "Abdulaziz Aloteeq (GK)", "no": "1"}, {"t": "elite", "n": "Mazeen", "no": "11"}, {"t": "elite", "n": "Abdulaziz Alghamdi", "no": "20"}, {"t": "falcons", "n": "Majed Abdulaal", "no": "24"}, {"t": "falcons", "n": "Rayan Alghamdi", "no": "6"}, {"t": "falcons", "n": "Sami Aljohani", "no": "11"}, {"t": "falcons", "n": "Hesham Alem", "no": "1"}, {"t": "falcons", "n": "Abed Alharbi", "no": "4"}, {"t": "falcons", "n": "Abdulwahed Aljohani", "no": "9"}, {"t": "falcons", "n": "Anwar Alghamdi", "no": "10"}, {"t": "falcons", "n": "Khalid Alharthi", "no": "8"}, {"t": "falcons", "n": "Abdullah Alansari", "no": "18"}, {"t": "falcons", "n": "Mohammed Alghamdi", "no": "7"}, {"t": "rangers", "n": "Mohammed Bawazeer", "no": "10"}, {"t": "rangers", "n": "Hassan Alfazi", "no": "16"}, {"t": "rangers", "n": "Baraa Alyamani", "no": "5"}, {"t": "rangers", "n": "Abdulaziz Al Abdullatif", "no": "3"}, {"t": "rangers", "n": "Faisal Alzanbaqi", "no": "1"}, {"t": "rangers", "n": "Saif Alnefaie", "no": "11"}, {"t": "rangers", "n": "Khaled Almoaiqali", "no": "18"}, {"t": "rangers", "n": "Mohammed Aljohni", "no": "99"}, {"t": "rangers", "n": "Jassar Hassan", "no": "67"}, {"t": "rangers", "n": "Majed Alsobhi", "no": "2"}, {"t": "rangers", "n": "Hussam Alghamdi", "no": "9"}, {"t": "lions", "n": "Abdullah Aloufi", "no": "7"}, {"t": "lions", "n": "Bandar Almadani", "no": "8"}, {"t": "lions", "n": "Mohammed Balharith", "no": "10"}, {"t": "lions", "n": "Mohammed Bin Salman", "no": "5"}, {"t": "lions", "n": "Anas Basha", "no": "1"}, {"t": "lions", "n": "Basem Alsubhi", "no": "12"}, {"t": "lions", "n": "Faisal Alfazi", "no": "4"}, {"t": "lions", "n": "Abdullah Alhazmi", "no": "17"}, {"t": "lions", "n": "Mohammed Alsinani", "no": "11"}, {"t": "warriors", "n": "Nawaf Alotaibi", "no": "11"}, {"t": "warriors", "n": "Ali Alharbi", "no": "99"}, {"t": "warriors", "n": "Muath Alnazzawi", "no": "10"}, {"t": "warriors", "n": "Abdullah Algaidi", "no": "4"}, {"t": "warriors", "n": "Khaled Juhani", "no": "8"}, {"t": "warriors", "n": "Abdullah Fallath", "no": "7"}, {"t": "warriors", "n": "Ismail Alghamdi", "no": "6"}, {"t": "warriors", "n": "Faisal Aljohani", "no": "18"}, {"t": "warriors", "n": "Zuhair Zulaly", "no": "17"}, {"t": "warriors", "n": "Ali Alzahrani", "no": "77"}, {"t": "warriors", "n": "Faisal Alhubaiahi", "no": "3"}, {"t": "warriors", "n": "Meleueke Bongani", "no": "24"}, {"t": "titans", "n": "Turki Abu Alola", "no": "12"}, {"t": "titans", "n": "Rayan Qutub", "no": "69"}, {"t": "titans", "n": "Omar Aljohani", "no": "10"}, {"t": "titans", "n": "Johnpaul", "no": "4"}, {"t": "titans", "n": "Abdullah Alsubhi", "no": "11"}, {"t": "titans", "n": "Nawaf Alsubaie", "no": "6"}, {"t": "titans", "n": "Alaa Alsharif", "no": "13"}, {"t": "titans", "n": "Eyad Alqurashi (GK)", "no": "1"}, {"t": "thunder", "n": "Mohammed A Aljohani", "no": "9"}, {"t": "thunder", "n": "Khalid AlJuhani", "no": "6"}, {"t": "thunder", "n": "Raad Najjar", "no": "18"}, {"t": "thunder", "n": "Abdullah Almarwani", "no": "98"}, {"t": "thunder", "n": "Mohamed Saidalani", "no": "4"}, {"t": "thunder", "n": "Mohsin Mushtaq", "no": "5"}, {"t": "thunder", "n": "Abdulraheem Beladi", "no": "8"}, {"t": "thunder", "n": "Abdulaziz hassan", "no": "99"}, {"t": "thunder", "n": "Khalid alamri", "no": "10"}, {"t": "thunder", "n": "Omar Al Otaibi", "no": "19"}, {"t": "thunder", "n": "Mazen", "no": "94"}, {"t": "sharks", "n": "Ahmed Dawood", "no": "2"}, {"t": "sharks", "n": "Hamzah Shuaib", "no": "15"}, {"t": "sharks", "n": "Musab Alharbi", "no": "9"}, {"t": "sharks", "n": "Abdulaziz Matrafi", "no": "4"}, {"t": "sharks", "n": "Osama Aljohani", "no": "24"}, {"t": "sharks", "n": "Sulaiman Almani", "no": "12"}, {"t": "sharks", "n": "Ahmed Mugheeth", "no": "6"}, {"t": "sharks", "n": "Rayan Alhindi", "no": "28"}, {"t": "sharks", "n": "Muayad Bahaidan", "no": "13"}, {"t": "sharks", "n": "Albaraa Halawani", "no": "17"}, {"t": "sharks", "n": "Mohammed Fallata", "no": "28"}, {"t": "sharks", "n": "Abdullah Shaib", "no": "22"}, {"t": "sharks", "n": "Omar Alamri", "no": "77"}, {"t": "spartans", "n": "Muath Alessa", "no": "3"}, {"t": "spartans", "n": "Abdullah Khayat", "no": "4"}, {"t": "spartans", "n": "Khalid Alqarni", "no": "6"}, {"t": "spartans", "n": "Hani", "no": "7"}, {"t": "spartans", "n": "Mohammed Alzahrani", "no": "8"}, {"t": "spartans", "n": "Abdulaziz Abu Battal", "no": "11"}, {"t": "spartans", "n": "Eyad Aljohani", "no": "13"}, {"t": "spartans", "n": "Hamad Alsayed", "no": "15"}, {"t": "spartans", "n": "Mohammed Aldaqeel", "no": "24"}];
+const BADGES={"797866": "falcons|Majed Abdulaal", "783504": "falcons|Rayan Alghamdi", "765096": "falcons|Sami Aljohani", "788487": "falcons|Abed Alharbi", "765098": "falcons|Abdulwahed Aljohani", "755136": "falcons|Anwar Alghamdi", "797857": "falcons|Khalid Alharthi", "836648": "falcons|Abdullah Alansari", "766895": "titans|Turki Abu Alola", "764643": "titans|Rayan Qutub", "762537": "titans|Omar Aljohani", "902926": "titans|Johnpaul", "768245": "titans|Abdullah Alsubhi", "762796": "titans|Nawaf Alsubaie", "777503": "titans|Alaa Alsharif", "773171": "titans|Eyad Alqurashi (GK)", "816255": "eagles|Ammar Barzeeq", "811253": "eagles|Firas Alhubaishi", "775654": "eagles|Abdulrahman Alfayedi", "774996": "eagles|Mohammed Aljohani", "811373": "eagles|Turki Jameel Aldeen", "783447": "eagles|Ahmed Albalawi (GK)", "769583": "eagles|Mazen Almustadi", "820706": "warriors|Nawaf Alotaibi", "826591": "warriors|Muath Alnazzawi", "826967": "warriors|Abdullah Algaidi", "755025": "warriors|Khaled Juhani", "769333": "warriors|Ismail Alghamdi", "811241": "warriors|Faisal Aljohani", "834289": "warriors|Zuhair Zulaly", "831839": "rangers|Mohammed Bawazeer", "822116": "rangers|Hassan Alfazi", "832106": "rangers|Baraa Alyamani", "833658": "rangers|Abdulaziz Al Abdullatif", "810878": "rangers|Faisal Alzanbaqi", "779999": "rangers|Saif Alnefaie", "757762": "rangers|Khaled Almoaiqali", "283463": "rangers|Mohammed Aljohni", "832125": "rangers|Jassar Hassan", "824819": "thunder|Mohammed A Aljohani", "288196": "thunder|Raad Najjar", "896313": "thunder|Mohsin Mushtaq", "753487": "lions|Abdullah Aloufi", "759844": "lions|Bandar Almadani", "750780": "lions|Mohammed Balharith", "758325": "lions|Mohammed Bin Salman", "758289": "lions|Anas Basha", "287454": "lions|Basem Alsubhi", "748742": "lions|Faisal Alfazi", "760952": "lions|Abdullah Alhazmi", "757445": "lions|Mohammed Alsinani", "816487": "sharks|Hamzah Shuaib", "840350": "sharks|Sulaiman Almani", "897856": "sharks|Ahmed Mugheeth", "836642": "sharks|Rayan Alhindi", "831492": "sharks|Muayad Bahaidan", "754640": "sharks|Albaraa Halawani", "752246": "falcons|Mohammed Alghamdi"};
 </script>
 <script>
 /* ===================================================================
@@ -204,6 +211,23 @@ const CFG = {
 const BYCLUB = CFG.ONE_VOTE_PER === 'club';
 let curClub = null;
 
+/* This device remembers its ballot. Re-voting keeps the same name and club,
+   so it replaces the earlier vote instead of adding a second one. */
+const VOTED_KEY = 'ynglfd-voted-' + CFG.VOTE_KEY;
+function loadVoted(){ try { return JSON.parse(localStorage.getItem(VOTED_KEY) || 'null'); } catch(e){ return null; } }
+function saveVoted(v){ try { localStorage.setItem(VOTED_KEY, JSON.stringify(v)); } catch(e){} }
+
+function showDone(v, returning){
+  $('#dtitle').textContent = returning ? 'سبق أن صوّتّ من هذا الجهاز' : 'تم تسجيل تصويتك';
+  $('#dpick').textContent = v.pickName;
+  $('#dteam').textContent = v.pickTeam + ' · No. ' + (v.pickNo || '—');
+  $('#dwho').textContent = 'باسم ' + v.name + ' — ' + TEAMS[v.team].name;
+  const note = $('#dnote');
+  note.textContent = 'صوت واحد لكل رقم وظيفي — تقدر تعدّل اختيارك، وبيستبدل تصويتك السابق.';
+  note.classList.toggle('hide', !returning);
+  show('s3');
+}
+
 const FIREBASE_CONFIG = {
   apiKey:      "AIzaSyAxP3w9yAfLrb7e_fEi0tEmmK_Y_PXXTao",
   authDomain:  "futsal-tournament-f0631.firebaseapp.com",
@@ -217,11 +241,13 @@ const $$ = s => [...document.querySelectorAll(s)];
 const show = id => { ['s1','s2','s3','s4'].forEach(k => $('#'+k).classList.toggle('hide', k !== id));
                      window.scrollTo({top:0}); };
 
-let ref = null, me = { name:'', team:'' }, pick = null, votesCache = {};
+let ref = null, me = { name:'', team:'', badge:'' }, pick = null, votesCache = {};
 
 const slug = s => s.toLowerCase().normalize('NFKD')
   .replace(/[^a-z0-9\u0621-\u064a]+/g,'-').replace(/^-+|-+$/g,'').slice(0,42) || 'x';
-const docKey = () => BYCLUB ? me.team : me.team + '__' + slug(me.name);
+const docKey = () => BYCLUB ? me.team : 'b' + me.badge;
+const cleanBadge = s => String(s||'').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\D/g,'');
+const isSelf = p => BADGES[me.badge] === p.t + '|' + p.n;
 
 function deviceId(){
   try {
@@ -260,26 +286,36 @@ function deviceId(){
   try {
     const saved = JSON.parse(localStorage.getItem('ynglfd-fanvoter') || '{}');
     if (saved.name) $('#vname').value = saved.name;
+    if (saved.badge) $('#vbadge').value = saved.badge;
     if (saved.team && TEAMS[saved.team]) teamSel.value = saved.team;
   } catch(e){}
 
   $('#boot').classList.add('hide');
-  show('s1'); validate1();
+  const voted = loadVoted();
+  if (voted && TEAMS[voted.team]) {
+    me.name = voted.name; me.team = voted.team; me.badge = voted.badge || '';
+    showDone(voted, true);
+  } else {
+    show('s1'); validate1();
+  }
 })();
 
 function errBox(msg){ const d = document.createElement('div'); d.className = 'err'; d.textContent = msg; return d; }
 
 /* ---------- step 1 ---------- */
 function validate1(){
-  const ok = $('#vname').value.trim().length >= 3 && $('#vteam').value;
+  const ok = $('#vname').value.trim().length >= 3 && $('#vteam').value
+          && /^\d{5,8}$/.test(cleanBadge($('#vbadge').value));
   $('#go').disabled = !ok;
 }
 $('#vname').addEventListener('input', validate1);
 $('#vteam').addEventListener('change', validate1);
+$('#vbadge').addEventListener('input', validate1);
 
 $('#go').addEventListener('click', async () => {
   me.name = $('#vname').value.trim();
   me.team = $('#vteam').value;
+  me.badge = cleanBadge($('#vbadge').value);
   try { localStorage.setItem('ynglfd-fanvoter', JSON.stringify(me)); } catch(e){}
 
   let prev = null;
@@ -289,7 +325,7 @@ $('#go').addEventListener('click', async () => {
     who.classList.remove('hide');
     who.textContent = (BYCLUB
         ? 'نادي ' + TEAMS[me.team].name + ' صوّت سابقاً (' + prev.voter + ')'
-        : 'سبق أن صوّت باسمك') + ' لـ ' + prev.pick.n + '. الإرسال الآن يستبدل ذلك التصويت.';
+        : 'سبق أن صوّت هذا الرقم الوظيفي') + ' لـ ' + prev.pick.n + '. الإرسال الآن يستبدل ذلك التصويت.';
     pick = PLAYERS.findIndex(p => p.n === prev.pick.n && p.t === prev.pick.t);
     if (pick < 0) pick = null;
   } else {
@@ -303,12 +339,12 @@ $('#go').addEventListener('click', async () => {
   renderList(); show('s2');
 });
 
-$('#back').addEventListener('click', () => show('s1'));
+$('#back').addEventListener('click', () => { if (loadVoted()) show('s3'); else show('s1'); });
 
 /* ---------- step 2 ---------- */
 function eligible(){
   return PLAYERS.map((p,i) => ({...p, i}))
-    .filter(p => CFG.ALLOW_OWN_TEAM || p.t !== me.team);
+    .filter(p => (CFG.ALLOW_OWN_TEAM || p.t !== me.team) && !isSelf(p));
 }
 
 function renderClubs(){
@@ -401,17 +437,18 @@ $('#toclubs').addEventListener('click', () => {
 $('#send').addEventListener('click', async () => {
   if (pick === null) return;
   const p = PLAYERS[pick], btn = $('#send');
+  if (isSelf(p)) { const w = $('#who'); w.className = 'err'; w.textContent = 'ما تقدر تصوّت لنفسك — اختر لاعباً ثانياً.'; pick = null; renderList(); return; }
   btn.disabled = true; btn.textContent = '…جارٍ الإرسال';
   try {
     await ref.child(docKey()).set({
-      voter: me.name, team: me.team, teamName: TEAMS[me.team].name,
+      voter: me.name, badge: me.badge, team: me.team, teamName: TEAMS[me.team].name,
       pick: { n: p.n, t: p.t, no: p.no, team: TEAMS[p.t].name },
       dev: deviceId(), ts: Date.now(), at: new Date().toISOString()
     });
-    $('#dpick').textContent = p.n;
-    $('#dteam').textContent = TEAMS[p.t].name + ' · No. ' + (p.no || '—');
-    $('#dwho').textContent = 'باسم ' + me.name + ' — ' + TEAMS[me.team].name;
-    show('s3');
+    const v = { name: me.name, badge: me.badge, team: me.team, pickName: p.n,
+                pickTeam: TEAMS[p.t].name, pickNo: p.no, ts: Date.now() };
+    saveVoted(v);
+    showDone(v, false);
   } catch (e) {
     const box = $('#who');
     box.className = 'err'; box.classList.remove('hide');
