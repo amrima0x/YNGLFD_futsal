@@ -1765,6 +1765,77 @@ body.sgopen{overflow:hidden}
   .sg-curve{height:30px;bottom:24%}
   .sg-wall .mn svg{max-width:44px}
 }
+
+/* ===== SEASON CLOSED (after the final) ===== */
+@font-face{font-family:'TajawalXB';src:url('fonts/tajawal-xb.ttf') format('truetype');font-weight:800;font-display:swap}
+.band{display:none !important}
+#v-next,#v-predict{display:none !important}
+.view:not(.on){display:none !important}
+@media (max-width:1100px){ .mnav{grid-template-columns:minmax(0,1fr) 84px minmax(0,1fr) !important} }
+#v-cup #cupContend,#v-cup #txWrap,#v-cup .pg-hero,#v-cup #playBoard,#v-cup .last4{display:none !important}
+body:not(.m-season) .season-bar{display:none}
+.season-bar{position:relative;padding:26px 0 6px;background:var(--ink)}
+.season-bar .shell{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.season-bar h2{font-family:var(--cond);font-size:1.5rem;letter-spacing:.05em;text-transform:uppercase;margin-right:auto}
+.season-bar h2 small{display:block;font-family:'TajawalXB',var(--body);font-size:.9rem;letter-spacing:0;color:var(--muted);text-transform:none}
+.season-bar .tabs{display:flex;gap:6px;flex-wrap:wrap}
+.season-bar .tabs button{font-family:var(--cond);letter-spacing:.08em;text-transform:uppercase;font-size:.86rem;
+  padding:8px 14px;border-radius:999px;border:1px solid var(--hair);background:transparent;color:var(--bone);cursor:pointer}
+.season-bar .tabs button.on{background:var(--lime);color:var(--ink);border-color:var(--lime)}
+.jump a.on{color:var(--lime)}
+/* final banner on the photos page */
+.fin-ban{position:relative;border:1px solid rgba(231,193,101,.45);border-radius:22px;overflow:hidden;margin:6px 0 28px;
+  background:radial-gradient(90% 120% at 50% 0%,rgba(231,193,101,.18),rgba(231,193,101,0) 60%),linear-gradient(160deg,#121730,#06080F)}
+.fin-ban::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:var(--gold-grad,linear-gradient(90deg,#C9A147,#E7C165))}
+.fin-ban .in{padding:24px 22px 22px;text-align:center}
+.fin-ban .ttl{font-family:var(--cond);letter-spacing:.32em;font-size:.8rem;color:var(--lime);text-transform:uppercase}
+.fin-ban .ar{font-family:'TajawalXB',var(--body);font-weight:800;font-size:1.25rem;margin-top:6px;direction:rtl}
+.fin-ban .mu{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:14px;margin:18px auto 6px;max-width:620px}
+.fin-ban .sd{display:flex;flex-direction:column;align-items:center;gap:8px}
+.fin-ban .sd svg{width:84px;height:84px}
+.fin-ban .sd b{font-family:var(--cond);font-size:1.2rem;letter-spacing:.06em;text-transform:uppercase}
+.fin-ban .sd u{text-decoration:none;font-size:.6rem;letter-spacing:.2em;color:var(--lime);text-transform:uppercase}
+.fin-ban .sd.lo{opacity:.72}
+.fin-ban .sc{font-family:var(--display);font-size:3.4rem;line-height:1;letter-spacing:.04em}
+.fin-ban .sc em{font-style:normal;color:var(--lime);margin:0 8px}
+.fin-ban .fmeta{font-size:.72rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-top:12px}
+.fin-ban .fgo{display:inline-flex;margin-top:16px;gap:8px;flex-wrap:wrap;justify-content:center}
+@media (max-width:600px){.fin-ban .sd svg{width:62px;height:62px}.fin-ban .sc{font-size:2.6rem}.fin-ban .ar{font-size:1.05rem}}
+/* champions intro */
+#champ{position:fixed;inset:0;z-index:10001;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  background:radial-gradient(60% 50% at 50% 42%,rgba(231,193,101,.25),rgba(6,8,15,0) 70%),#06080F;text-align:center;padding:24px;
+  animation:chOut .6s ease 3.1s forwards}
+#champ .cr{width:min(46vw,230px);animation:chIn .9s cubic-bezier(.16,.84,.34,1.02) both;filter:drop-shadow(0 18px 50px rgba(0,0,0,.6))}
+#champ .cr svg{width:100%;height:auto}
+#champ .k{font-family:var(--cond);letter-spacing:.42em;font-size:.82rem;color:var(--lime);margin-top:14px;animation:chUp .7s .5s both}
+#champ h1{font-family:var(--display);font-size:clamp(2.6rem,9vw,5.2rem);line-height:.95;letter-spacing:.02em;animation:chUp .7s .7s both}
+#champ h1 em{font-style:normal;background:var(--gold-grad,linear-gradient(90deg,#C9A147,#E7C165));-webkit-background-clip:text;color:transparent}
+#champ .ar{font-family:'TajawalXB',var(--body);font-weight:800;font-size:clamp(1.2rem,4.4vw,1.8rem);direction:rtl;animation:chUp .7s .9s both}
+#champ .cf{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+#champ .cf i{position:absolute;top:-20px;width:8px;height:14px;border-radius:2px;animation:chFall linear infinite}
+@keyframes chIn{0%{opacity:0;transform:scale(.6) rotate(-6deg)}100%{opacity:1;transform:none}}
+@keyframes chUp{0%{opacity:0;transform:translateY(16px)}100%{opacity:1;transform:none}}
+@keyframes chOut{to{opacity:0;visibility:hidden}}
+@keyframes chFall{to{transform:translateY(110vh) rotate(540deg)}}
+#champ.done{display:none}
+/* thank-you note */
+#thanks{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:18px;
+  background:rgba(4,6,12,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:opacity .6s}
+#thanks.hide{opacity:0;pointer-events:none}
+#thanks .card{position:relative;max-width:560px;width:100%;border-radius:24px;padding:34px 28px 26px;direction:rtl;text-align:center;
+  background:radial-gradient(90% 70% at 50% 0%,rgba(231,193,101,.16),rgba(231,193,101,0) 70%),linear-gradient(170deg,#121730,#06080F);
+  border:1px solid rgba(231,193,101,.45);box-shadow:0 40px 100px rgba(0,0,0,.6);animation:chUp .7s both}
+#thanks .x{position:absolute;top:12px;left:12px;width:38px;height:38px;border-radius:50%;border:1px solid var(--hair);
+  background:rgba(255,255,255,.06);color:var(--bone);font-size:1.1rem;cursor:pointer;display:grid;place-items:center}
+#thanks .lg{width:74px;height:83px;margin:0 auto 10px;background:var(--logo) center/contain no-repeat}
+#thanks h3{font-family:'TajawalXB',var(--body);font-weight:800;font-size:1.6rem;color:var(--lime);margin-bottom:14px}
+#thanks p{font-family:'TajawalXB',var(--body);font-weight:800;font-size:1.04rem;line-height:2;color:#E9ECF5}
+#thanks .sig{margin-top:18px;font-family:'TajawalXB',var(--body);font-weight:800;font-size:1.15rem;color:var(--lime)}
+#thanks .sig small{display:block;font-size:.78rem;color:var(--muted);margin-top:2px}
+#thanks .bar{height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin-top:18px;overflow:hidden}
+#thanks .bar i{display:block;height:100%;width:100%;background:var(--lime);transform-origin:right;animation:thBar 16s linear forwards}
+@keyframes thBar{to{transform:scaleX(0)}}
+@media (prefers-reduced-motion:reduce){#champ,#champ *,#thanks *{animation-duration:.01ms !important}}
 </style>
 </head>
 <body>
@@ -1775,6 +1846,30 @@ body.sgopen{overflow:hidden}
   <div class="sp-logo" role="img" aria-label="YNGLFD Futsal Cup 2026"></div>
 </div>
 
+
+<!-- champions intro, then the thank-you note -->
+<div id="champ" aria-hidden="true"><div class="cf" id="champCf"></div>
+  <div class="cr" id="champCrest"></div>
+  <div class="k">YNGLFD FUTSAL CUP 2026</div>
+  <h1>EAGLES<br><em>CHAMPIONS</em></h1>
+  <div class="ar">إيقلز أبطال البطولة</div>
+</div>
+<div id="thanks" class="hide" role="dialog" aria-modal="true" aria-label="رسالة شكر">
+  <div class="card">
+    <button class="x" id="thanksX" aria-label="إغلاق">✕</button>
+    <div class="lg"></div>
+    <h3>شكراً من القلب</h3>
+    <p>انتهت بطولة <bdi>YNGLFD Futsal Cup 2026</bdi>، لكن ما عشناه معكم سيبقى طويلاً.<br>
+    لكل لاعبٍ ركض حتى آخر نفس، ولكل كابتنٍ حمل فريقه على كتفيه، ولكل مشجّعٍ ملأ المدرجات بالحماس،
+    ولكل من نظّم وتطوّع ودعم من خلف الستار ونحن نرى تعبه في كل ليلة مباراة…<br>
+    أنتم من صنع هذه البطولة، وأنتم من أعطاها روحها.<br>
+    كل هدف، كل ضحكة، كل لحظة فرح وحتى كل دمعة خسارة — عنت لنا الكثير، أكثر مما تقوله الكلمات.<br>
+    شكراً لأنكم كنتم معنا، ونلقاكم على خير في الموسم القادم بإذن الله.</p>
+    <div class="sig">مشعل العمري<small>اللجنة المنظمة · <bdi>YNGLFD Futsal Cup 2026</bdi></small></div>
+    <div class="bar"><i></i></div>
+  </div>
+</div>
+
 <!-- desktop rail -->
 <header class="rail">
   <div class="rail-in">
@@ -1783,9 +1878,8 @@ body.sgopen{overflow:hidden}
       <div class="mark-txt"><strong>Yanbu NGL Fractionation</strong><span>Indoor Futsal · Season 26</span></div>
     </div>
     <nav class="jump">
-      <a href="#v-cup" class="hot">Cup</a><a href="#v-next">Next</a><a href="#v-table">Table</a>
-      <a href="#v-games">Fixtures</a><a href="#v-stats">Stats</a><a href="#v-photos">Photos</a>
-      <a href="#v-paper">Room 214</a><a href="#v-predict">Predict</a>
+      <a href="#v-photos" data-go="photos" class="hot">Photos</a><a href="#v-paper" data-go="paper">Room 214</a>
+      <a href="#season" data-go="season">Season archive</a>
     </nav>
     <div class="sync" id="sync"><i></i><span id="syncTxt">Connecting</span></div>
     <button class="btn" id="btnInstall" style="display:none">Install App</button>
@@ -1843,12 +1937,18 @@ body.sgopen{overflow:hidden}
 
 <div class="band"></div>
 
+<div class="season-bar" id="seasonBar"><div class="shell">
+  <h2>Season archive<small>أحداث الموسم</small></h2>
+  <div class="tabs" id="seasonTabs"><button data-s="cup">Cup</button><button data-s="table">Table</button>
+    <button data-s="games">Fixtures</button><button data-s="stats">Stats</button></div>
+  <button class="btn" id="seasonBack">‹ Photos &amp; Room 214</button>
+</div></div>
 <!-- VIEW: CUP -->
-<div class="view on" id="v-cup">
+<div class="view" id="v-cup">
 <section class="dark" style="padding-bottom:52px">
   <div class="shell">
     <div class="kx-hero" id="cupHero"></div>
-    <div class="sec-head">
+    <div class="sec-head last4">
       <div><p class="eyebrow">Final week</p><h2>The Last Four</h2></div>
       <p class="sec-note" style="color:var(--muted)">Four clubs left. Two nights. One trophy.</p>
     </div>
@@ -1929,9 +2029,10 @@ body.sgopen{overflow:hidden}
 
 <!-- VIEW: PREDICTIONS -->
 <!-- VIEW: PHOTOS -->
-<div class="view" id="v-photos">
+<div class="view on" id="v-photos">
 <section class="dark">
   <div class="shell">
+    <div class="fin-ban" id="finBan"></div>
     <div class="sec-head">
       <div><p class="eyebrow">From the court</p><h2>Match Photos</h2></div>
       <p class="sec-note" style="color:var(--muted)">Every match night in one place — tap a photo to open it full size</p>
@@ -1994,14 +2095,9 @@ body.sgopen{overflow:hidden}
 
 <!-- mobile bottom nav -->
 <nav class="mnav" id="mnav">
-  <button data-v="next"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>Next</span></button>
-  <button data-v="table"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>Table</span></button>
-  <button data-v="games"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3l3 5-3 3-3-3z"/><path d="M4.5 9l4 1M19.5 9l-4 1M7 19l1.5-4M17 19l-1.5-4"/></svg><span>Games</span></button>
-  <button data-v="stats"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg><span>Stats</span></button>
-  <button data-v="cup" class="fab on" aria-label="Cup &amp; knockouts"><i class="fabr"><svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 5H5v2a3 3 0 0 0 3 3M16 5h3v2a3 3 0 0 1-3 3"/><path d="M10 20h4M12 13v7"/></svg></i><span>Cup</span></button>
-  <button data-v="photos"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.2"/><path d="M8 6l1.5-2h5L16 6"/></svg><span>Photos</span></button>
-  <button data-v="paper"><svg viewBox="0 0 24 24"><path d="M4 5h11a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v8a2 2 0 0 1-2 2h-1z"/><path d="M7 9h7M7 12.5h7M7 16h4"/></svg><span>214</span></button>
-  <button data-v="predict"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.8-4.3 4.1 1 5.8L12 16l-5.2 3 1-5.8-4.3-4.1 5.9-.8z"/></svg><span>Predict</span></button>
+  <button data-v="paper"><svg viewBox="0 0 24 24"><path d="M4 5h11a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z"/><path d="M17 9h3v8a2 2 0 0 1-2 2h-1z"/><path d="M7 9h7M7 12.5h7M7 16h4"/></svg><span>Room 214</span></button>
+  <button data-v="photos" class="fab on" aria-label="Photos"><i class="fabr"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><circle cx="12" cy="12.5" r="3.2"/><path d="M8 6l1.5-2h5L16 6"/></svg></i><span>Photos</span></button>
+  <button data-v="season"><svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 5H5v2a3 3 0 0 0 3 3M16 5h3v2a3 3 0 0 1-3 3"/><path d="M10 20h4M12 13v7"/></svg><span>Season</span></button>
 </nav>
 
 <div class="stage" id="stage" role="dialog" aria-label="Display mode">
@@ -4857,25 +4953,38 @@ $('#btnStage').addEventListener('click',openStage);
 $('#mStage').addEventListener('click',openStage);
 $('#btnExit').addEventListener('click',closeStage);
 
-/* mobile view switching */
-const VIEWS=['next','table','games','stats','cup','photos','paper','predict'];
-function showView(v){
-  VIEWS.forEach(x=>$('#v-'+x).classList.toggle('on',x===v));
-  $$('#mnav button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));
-  window.scrollTo({top:0,behavior:'instant'});
+/* view switching — after the final the board opens on Photos and Room 214;
+   everything else lives in the Season archive */
+const HOME=['photos','paper'], SEASON=['cup','table','games','stats'];
+const ALLV=['next','predict'].concat(SEASON,HOME);
+let CURV='photos';
+function curList(){ return HOME.indexOf(CURV)>=0 ? HOME : SEASON; }
+let VIEWS=HOME;
+function showView(v, noScroll){
+  if(v==='season') v='cup';
+  if(ALLV.indexOf(v)<0 || v==='next' || v==='predict') v='photos';
+  CURV=v; VIEWS=curList();
+  const season = VIEWS===SEASON;
+  document.body.classList.toggle('m-season',season);
+  const small = window.matchMedia('(max-width:820px)').matches;
+  ALLV.forEach(x=>{ const el=$('#v-'+x); if(el) el.classList.toggle('on', small ? x===v : VIEWS.indexOf(x)>=0); });
+  $$('#mnav button').forEach(b=>b.classList.toggle('on', b.dataset.v===v || (b.dataset.v==='season' && season)));
+  $$('#seasonTabs button').forEach(b=>b.classList.toggle('on', b.dataset.s===v));
+  $$('.jump a').forEach(a=>a.classList.toggle('on', a.dataset.go===v || (a.dataset.go==='season' && season)));
+  if(!noScroll){
+    if(!small && season && v!=='cup'){ const t=$('#v-'+v); if(t) window.scrollTo({top:t.offsetTop-70,behavior:'smooth'}); }
+    else if(!small && v==='paper'){ const t=$('#v-paper'); if(t) window.scrollTo({top:t.offsetTop-70,behavior:'smooth'}); }
+    else window.scrollTo({top:0,behavior:'instant'});
+  }
+  try{ history.replaceState(null,'', season ? '#season' : (v==='paper' ? '#room214' : location.pathname)); }catch(e){}
 }
 $$('#mnav button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.v)));
-$$('.jump a').forEach(a=>a.addEventListener('click',e=>{
-  e.preventDefault();
-  const t=document.querySelector(a.getAttribute('href'));
-  if(t) window.scrollTo({top:t.offsetTop-70,behavior:'smooth'});
-}));
+$$('#seasonTabs button').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.s)));
+$('#seasonBack').addEventListener('click',()=>showView('photos'));
+$$('.jump a').forEach(a=>a.addEventListener('click',e=>{ e.preventDefault(); showView(a.dataset.go); }));
 
 const mq=window.matchMedia('(max-width:820px)');
-function applyMode(){
-  if(mq.matches){ const cur=VIEWS.filter(v=>$('#v-'+v).classList.contains('on'))[0]||'cup'; showView(cur); }
-  else VIEWS.forEach(v=>$('#v-'+v).classList.add('on'));
-}
+function applyMode(){ showView(CURV, true); }
 if(mq.addEventListener) mq.addEventListener('change',applyMode); else mq.addListener(applyMode);
 
 document.addEventListener('keydown',e=>{
@@ -4897,7 +5006,7 @@ document.addEventListener('keydown',e=>{
     if(x0==null||!mq.matches||$('#veil').classList.contains('on')) return;
     const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0;
     if(Math.abs(dx)>70 && Math.abs(dx)>Math.abs(dy)*1.7){
-      const cur=VIEWS.filter(v=>$('#v-'+v).classList.contains('on'))[0]||'next';
+      const cur=CURV;
       let i=VIEWS.indexOf(cur)+(dx<0?1:-1);
       if(i>=0 && i<VIEWS.length){
         if($('#stage').classList.contains('on')) showBoard(stIdx+(dx<0?1:-1));
@@ -4928,7 +5037,7 @@ const ROUNDS = (()=>{
   return out;                      /* [[1,2,3],[4,5,6],[7,8],[9,10,11],[12,13,14]] */
 })();
 function roundOf(md){
-  if(md==null || md==='general' || md==='ko') return md;
+  if(md==null || md==='general' || md==='ko' || md==='final') return md;
   const i=ROUNDS.findIndex(r=>r.indexOf(+md)>=0);
   return i<0 ? 'general' : (i+1);
 }
@@ -4940,7 +5049,10 @@ function roundDates(r){
   return shortDate(first)+' – '+shortDate(last);
 }
 let galMd = '';
-function coverOfRound(k){ const c=state.covers||{}; return c[k]||c[String(k)]||''; }
+const COVER_DEFAULT={ final:'covers/final.jpg' };
+function coverOfRound(k){ const c=state.covers||{}; return c[k]||c[String(k)]||COVER_DEFAULT[k]||''; }
+/* newest first: the final, the semi-finals, then round 5 down to round 1 */
+function galRank(k){ return k==='final'?1000 : k==='ko'?999 : (+k>=1 ? +k : -1); }
 function albumOfRound(k){ const a=state.albums||{}; return a[k]||a[String(k)]||''; }
 function mediaList(){ return Array.isArray(state.media) ? state.media.filter(m=>m && m.url) : []; }
 function paperList(){
@@ -4973,7 +5085,8 @@ function imgFb(u,w){
 }
 const isImg = u => !isDriveFolder(u) && (/\.(jpe?g|png|gif|webp|avif|bmp)(\?|#|$)/i.test(u||'') || !!driveId(u));
 function mdLabel(key){
-  if(key==='ko') return 'Knockout week';
+  if(key==='final') return 'The Final · Wed 4 Nov';
+  if(key==='ko') return 'Semi-finals · Mon 26 Oct';
   if(key==='general' || key===''||key==null) return 'Around the tournament';
   const r=+key;
   return 'Round '+r+(roundDates(r)?(' · '+roundDates(r)):'');
@@ -4982,11 +5095,11 @@ function mdLabel(key){
    An older photo carries only md = a match day, which is mapped to its round. */
 function mediaKey(m){
   if(m && m.r!=null && m.r!==''){
-    if(m.r==='general'||m.r==='ko') return m.r;
+    if(m.r==='general'||m.r==='ko'||m.r==='final') return m.r;
     const r=+m.r; if(r>=1) return String(r);
   }
   const v=(m && m.md!=null) ? m.md : 'general';
-  if(v==='general'||v==='ko') return v;
+  if(v==='general'||v==='ko'||v==='final') return v;
   const n=+v; if(!(n>=1)) return 'general';
   /* photos added from the gallery store a round; anything past the last round
      is a match day, which is mapped to the round it belongs to */
@@ -4998,17 +5111,17 @@ function renderGallery(){
   if(sel){
     const groups=[...new Set(mediaList().map(mediaKey))];
     sel.innerHTML=['<option value="">All rounds</option>']
-      .concat(groups.sort((a,b)=>(+b||0)-(+a||0)).map(g=>'<option value="'+g+'"'+(galMd===g?' selected':'')+'>'+esc(mdLabel(g))+'</option>')).join('');
+      .concat(groups.concat(['final']).filter((g,i,a)=>a.indexOf(g)===i).sort((a,b)=>galRank(b)-galRank(a)).map(g=>'<option value="'+g+'"'+(galMd===g?' selected':'')+'>'+esc(mdLabel(g))+'</option>')).join('');
     sel.onchange=e=>{ galMd=e.target.value; renderGallery(); };
   }
   const all=mediaList().filter(m=>!galMd || mediaKey(m)===galMd);
   const by={};
   all.forEach(m=>{ const k=mediaKey(m); (by[k]=by[k]||[]).push(m); });
   /* a round with a cover or an album still gets its own card, even with no photos */
-  Object.keys(Object.assign({}, state.covers||{}, state.albums||{})).forEach(k=>{
+  Object.keys(Object.assign({final:1}, state.covers||{}, state.albums||{})).forEach(k=>{
     if((!galMd || k===galMd) && !by[k]) by[k]=[];
   });
-  const keys=Object.keys(by).sort((a,b)=>(+b||0)-(+a||0));
+  const keys=Object.keys(by).sort((a,b)=>galRank(b)-galRank(a));
   if(!keys.length){
     host.innerHTML='<div class="empty-note">No photos yet'+(admin?' — use “Add photos” to paste the links':'')+'</div>';
     return;
@@ -5097,7 +5210,8 @@ function openPhoto(id){
 function openGalleryAdd(){
   if(!admin){ toast('Organiser code needed','bad'); return; }
   const opts=ROUNDS.map((r,i)=>'<option value="'+(i+1)+'">'+esc(mdLabel(i+1))+'</option>').reverse()
-    .concat(['<option value="ko">Knockout week</option>','<option value="general">Around the tournament</option>']);
+    .concat(['<option value="ko">Semi-finals</option>','<option value="general">Around the tournament</option>']);
+  opts.unshift('<option value="final">The Final</option>');
   openVeil('<div class="modal-h"><h3>Add photos</h3><button class="btn sm x">Close</button></div>'
    +'<div class="modal-b"><p class="pr-hint">One link per line. Either a file kept beside the site, e.g. <code>photos/r4/01.jpg</code>, '
    +'or a Google Drive link set to <b>Anyone with the link · Viewer</b>. A Drive <i>folder</i> link shows as an album card instead.</p>'
@@ -5110,7 +5224,7 @@ function openGalleryAdd(){
     const urls=$('#gUrls').value.split('\n').map(cleanLink).filter(Boolean);
     if(!urls.length){ toast('Paste at least one link','bad'); return; }
     const now=Date.now();
-    const key=(md==='general'||md==='ko')?md:+md;
+    const key=(md==='general'||md==='ko'||md==='final')?md:+md;
     state.media = mediaList().concat(urls.map((u,n)=>({
       id:'m'+now+'-'+n, r:key, md:key, url:u, cap:cap, ts:now+n })));
     await pushState(); renderAll(); closeVeil();
@@ -5262,7 +5376,8 @@ $('#galAdd').addEventListener('click',openGalleryAdd);
 $('#galCover').addEventListener('click',()=>{
   if(!admin){ toast('Organiser code needed','bad'); return; }
   const opts=ROUNDS.map((r,i)=>'<option value="'+(i+1)+'">'+esc(mdLabel(i+1))+'</option>').reverse()
-    .concat(['<option value="ko">Knockout week</option>','<option value="general">Around the tournament</option>']);
+    .concat(['<option value="ko">Semi-finals</option>','<option value="general">Around the tournament</option>']);
+  opts.unshift('<option value="final">The Final</option>');
   openVeil('<div class="modal-h"><h3>Round cover &amp; album</h3><button class="btn sm x">Close</button></div>'
    +'<div class="modal-b"><p class="pr-hint">Pick the round, then set the picture people tap and the folder it opens.</p>'
    +'<div class="field"><label>Round</label><select id="cvMd" class="sel">'+opts.join('')+'</select></div>'
@@ -5282,6 +5397,46 @@ $('#paperAdd').addEventListener('click',openPaperAdd);
   document.body.appendChild(b);
   setTimeout(tipDaily, 1200);
 })();
+
+/* the final, on top of the photos page */
+function renderFinalBanner(){
+  const host=$('#finBan'); if(!host) return;
+  const f=(state.ko||{}).final||{}, hs=f.hs, as=f.as, done = hs!=null && as!=null && hs!=='' && as!=='';
+  const H='eagles', A='elite';
+  const hw = done && +hs>+as, aw = done && +as>+hs;
+  host.innerHTML='<div class="in"><div class="ttl">The Final · Season 2026 · Tournament complete</div>'
+    +'<div class="ar">انتهت البطولة — مبروك لإيقلز أبطال الموسم</div>'
+    +'<div class="mu"><div class="sd'+(aw?' lo':'')+'">'+crest(H,84)+'<b>Eagles</b>'+(hw?'<u>Champions</u>':'')+'</div>'
+    +'<div class="sc">'+(done?(esc(String(hs))+'<em>–</em>'+esc(String(as))):'4<em>–</em>3')+'</div>'
+    +'<div class="sd'+(hw?' lo':'')+'">'+crest(A,84)+'<b>Elite</b>'+(aw?'<u>Champions</u>':'<u>Runners-up</u>')+'</div></div>'
+    +'<div class="fmeta">Wednesday 4 November 2026 · Indoor Futsal Court, Yanbu</div>'
+    +'<div class="fgo"><button class="btn" id="finPaper">Room 214 newspaper</button><button class="btn" id="finSeason">Season archive</button></div></div>';
+  $('#finPaper').onclick=()=>showView('paper');
+  $('#finSeason').onclick=()=>showView('season');
+}
+(function(){ const r=renderAll; renderAll=function(){ r.apply(this,arguments); try{ renderFinalBanner(); }catch(e){} }; })();
+
+/* intro: Eagles champions → thank-you note → the board */
+(function(){
+  const ch=$('#champ'), th=$('#thanks');
+  if(!ch||!th) return;
+  try{ $('#champCrest').innerHTML=crest('eagles'); }catch(e){}
+  const cols=['#E7C165','#F7E6B8','#ffffff','#1A2A6C','#C9A147'];
+  let h=''; for(let i=0;i<46;i++){ h+='<i style="left:'+(Math.random()*100)+'%;background:'+cols[i%cols.length]
+    +';animation-duration:'+(2.6+Math.random()*2.4)+'s;animation-delay:'+(Math.random()*1.6)+'s;transform:rotate('+(Math.random()*180)+'deg)"></i>'; }
+  $('#champCf').innerHTML=h;
+  let shut=false, timer=null;
+  const closeNote=()=>{ if(shut) return; shut=true; clearTimeout(timer); th.classList.add('hide'); setTimeout(()=>{ th.style.display='none'; },650); };
+  const openNote=()=>{ ch.classList.add('done'); th.classList.remove('hide'); timer=setTimeout(closeNote,16000); };
+  ch.addEventListener('animationend',e=>{ if(e.animationName==='chOut') openNote(); });
+  setTimeout(()=>{ if(!ch.classList.contains('done')) openNote(); },4200);
+  ch.addEventListener('click',openNote);
+  $('#thanksX').addEventListener('click',closeNote);
+  th.addEventListener('click',e=>{ if(e.target===th) closeNote(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeNote(); });
+})();
+if(/season/i.test(location.hash)) CURV='cup';
+if(/room214|paper/i.test(location.hash)) CURV='paper';
 
 (async function boot(){
   /* clear the intro splash once its fade-out has run */
