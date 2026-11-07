@@ -1833,7 +1833,7 @@ body:not(.m-season) .season-bar{display:none}
 #thanks .sig{margin-top:18px;font-family:'TajawalXB',var(--body);font-weight:800;font-size:1.15rem;color:var(--lime)}
 #thanks .sig small{display:block;font-size:.78rem;color:var(--muted);margin-top:2px}
 #thanks .bar{height:3px;border-radius:2px;background:rgba(255,255,255,.1);margin-top:18px;overflow:hidden}
-#thanks .bar i{display:block;height:100%;width:100%;background:var(--lime);transform-origin:right;animation:thBar 16s linear forwards}
+#thanks .bar i{display:block;height:100%;width:100%;background:var(--lime);transform-origin:right;animation:thBar 28s linear forwards}
 @keyframes thBar{to{transform:scaleX(0)}}
 @media (prefers-reduced-motion:reduce){#champ,#champ *,#thanks *{animation-duration:.01ms !important}}
 </style>
@@ -1865,7 +1865,7 @@ body:not(.m-season) .season-bar{display:none}
     أنتم من صنع هذه البطولة، وأنتم من أعطاها روحها.<br>
     كل هدف، كل ضحكة، كل لحظة فرح وحتى كل دمعة خسارة — عنت لنا الكثير، أكثر مما تقوله الكلمات.<br>
     شكراً لأنكم كنتم معنا، ونلقاكم على خير في الموسم القادم بإذن الله.</p>
-    <div class="sig">مشعل العمري<small>اللجنة المنظمة · <bdi>YNGLFD Futsal Cup 2026</bdi></small></div>
+    <div class="sig">مشعل العمري</div>
     <div class="bar"><i></i></div>
   </div>
 </div>
@@ -5427,7 +5427,7 @@ function renderFinalBanner(){
   $('#champCf').innerHTML=h;
   let shut=false, timer=null;
   const closeNote=()=>{ if(shut) return; shut=true; clearTimeout(timer); th.classList.add('hide'); setTimeout(()=>{ th.style.display='none'; },650); };
-  const openNote=()=>{ ch.classList.add('done'); th.classList.remove('hide'); timer=setTimeout(closeNote,16000); };
+  const openNote=()=>{ ch.classList.add('done'); th.classList.remove('hide'); timer=setTimeout(closeNote,28000); };
   ch.addEventListener('animationend',e=>{ if(e.animationName==='chOut') openNote(); });
   setTimeout(()=>{ if(!ch.classList.contains('done')) openNote(); },4200);
   ch.addEventListener('click',openNote);
