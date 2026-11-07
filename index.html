@@ -2041,7 +2041,6 @@ body:not(.m-season) .season-bar{display:none}
 <div class="view" id="v-photos">
 <section class="dark">
   <div class="shell">
-    <div class="fin-ban" id="finBan"></div>
     <div class="sec-head">
       <div><p class="eyebrow">From the court</p><h2>Match Photos</h2></div>
       <p class="sec-note" style="color:var(--muted)">Every match night in one place — tap a photo to open it full size</p>
@@ -5411,7 +5410,7 @@ $('#paperAdd').addEventListener('click',openPaperAdd);
 
 /* the final, on top of the photos page */
 function renderFinalBanner(){
-  const hosts=[$('#finBan'),$('#finBanCup')].filter(Boolean); if(!hosts.length) return;
+  const hosts=[$('#finBanCup')].filter(Boolean); if(!hosts.length) return;
   const f=(state.ko||{}).final||{}, hs=f.hs, as=f.as, done = hs!=null && as!=null && hs!=='' && as!=='';
   const H='eagles', A='elite';
   const hw = done && +hs>+as, aw = done && +as>+hs;
